@@ -4,66 +4,66 @@ import { config } from "../config/config.js";
 
 //Set token and token response
 
-async function sendTokenResponse(user,res,message) {
-    
-const token=jwt.sign(
-    {
-        id:user._id
-    },config.JWT_SECRET,{expiresIn:"10d"}
-)
+async function sendTokenResponse(user, res, message) {
 
-res.cookie("token",token);
+    const token = jwt.sign(
+        {
+            id: user._id
+        }, config.JWT_SECRET, { expiresIn: "10d" }
+    )
 
-res.status(200).json({
- message,
-    token,
-  user:{
-    email:user.email,
-    contact:user.contact,
-    fullname:user.fullname,
-    role:user.role
-  }
-})
+    res.cookie("token", token);
+
+    res.status(200).json({
+        message,
+        token,
+        user: {
+            email: user.email,
+            contact: user.contact,
+            fullname: user.fullname,
+            role: user.role
+        }
+    })
 
 }
 
 
 //Register Controller
 
-export async function register(req,res){
+export async function register(req, res) {
 
 
-const{email,contact,password,fullname,role}=req.body;    
+    const { email, contact, password, fullname, isSeller } = req.body;
 
 
-try{
-const isUserExist=await userModel.findOne({
-    $or:[
-        {email},
-       {contact}
-    ]
-})
+    try {
+        const isUserExist = await userModel.findOne({
+            $or: [
+                { email },
+                { contact }
+            ]
+        })
 
 
-if(isUserExist){
-    return res.status(400).json({
-        message:'Sorry this user is alread exist'
-    })
-}
+        if (isUserExist) {
+            return res.status(400).json({
+                message: 'Sorry this user is alread exist'
+            })
+        }
 
-const user = await userModel.create({
-    email:email,
-    contact:contact,
-    password:password,
-    fullname:fullname,
-    role:role
-})
+        const user = await userModel.create({
+            email,
+            contact,
+            password,
+            fullname,
+            role: isSeller ? "seller" : "buyer"
+        })
 
-await sendTokenResponse(user,res,"user register sucessfully");
+        await sendTokenResponse(user, res, "user register sucessfully");
 
-}catch(err){
-return res.status(500).json({message:"Server Error"});
-}
+    } catch (err) {
+        return res.status(500).json({ message: "Server Error" });
+    }
 
 
 
@@ -72,7 +72,7 @@ return res.status(500).json({message:"Server Error"});
 
 //Login Controller
 
-export async function login(req,res) {
-    
-    
+export async function login(req, res) {
+
+
 }

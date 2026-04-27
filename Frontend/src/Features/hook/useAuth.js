@@ -1,4 +1,4 @@
-import { setUser, setError, setLoading } from "../Auth/auth.slice";
+import { setUser, setError, setLoading } from "../Auth/state/auth.slice";
 
 import { register } from "../Auth/services/auth.api";
 

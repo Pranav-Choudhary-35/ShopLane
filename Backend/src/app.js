@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/auth.routes.js'
 const app=express();
-
+import cors from 'cors';
 
 //for api testing
 app.use(morgan('dev'));
@@ -17,7 +17,12 @@ app.use(express.json());
 // for form data parsing
 app.use(express.urlencoded({extended:true}));
 
-
+//cros 
+app.use(cors({
+    origin:'https://localhost:5173',
+    methods:["GET","POST","PUT","DELETE"],
+    credentials:true
+}))
 
 
 

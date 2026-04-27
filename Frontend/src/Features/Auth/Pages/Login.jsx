@@ -93,14 +93,14 @@ const Login = () => {
                                 className="text-xs tracking-[0.35em] uppercase"
                                 style={{ fontFamily: "'Cormorant Garamond', serif", color: '#FFC107' }}
                             >
-                                Snitch.
+                                ShopeLane.
                             </span>
                         </div>
 
                         {/* Header */}
                         <div className="mb-8">
                             <p
-                                className="text-[8px] lg:text-[10px] uppercase tracking-[0.22em] mb-2 lg:mb-4 font-medium"
+                                className="text-[10px] lg:text-[15px] uppercase tracking-[0.22em] mb-2 lg:mb-4 font-medium"
                                 style={{ color: '#FFC107' }}
                             >
                                 Welcome back to ShopLane

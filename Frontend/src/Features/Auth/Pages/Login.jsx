@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../hook/useAuth";
 import { useNavigate } from "react-router-dom";
+import GoogleLogin from "../../Components/GoogleLogin";
 
 const Login = () => {
   const { handleLogin } = useAuth();
@@ -249,6 +250,8 @@ const Login = () => {
                 )}
               </div>
 
+           
+
               {/* Sign In Button */}
               <button
                 type="submit"
@@ -270,10 +273,13 @@ const Login = () => {
                 Sign In
               </button>
 
+   {/*GoogleLogin*/}
+              <GoogleLogin />
+
               {/* Divider */}
               <div className="flex items-center gap-3">
                 <div
-                  className="flex-1 h-px"
+                  className= "flex-1 h-px"
                   style={{ backgroundColor: "#1f1f22" }}
                 />
                 <span className="text-[8px] lg:text-[10px] uppercase tracking-[0.15em] text-zinc-600">

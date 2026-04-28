@@ -2,8 +2,34 @@ import express from 'express'
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/auth.routes.js'
+import passport from 'passport'
+import {Strategy as GoogleStrategy} from "passport-google-oauth20"
+import { config } from 'dotenv';
+import cors from "cors";
+
 const app=express();
-import cors from 'cors';
+
+// google auth setup
+
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: '/api/auth/google/callback',
+}, (accessToken, refreshToken, profile, done) => {
+  
+  return done(null, profile);
+}));
+
+
+app.use(cors({
+    origin: "http://localhost:5173",
+    methods: [ "GET", "POST", "PUT", "DELETE" ],
+    credentials: true
+}))
+
+
+
+
 
 //for api testing
 app.use(morgan('dev'));
@@ -15,12 +41,6 @@ app.use(cookieParser());
 // for form data parsing
 app.use(express.urlencoded({extended:true}));
 
-//cros 
-app.use(cors({
-    origin:'http://localhost:5173',
-    methods:["GET","POST","PUT","DELETE"],
-    credentials:true
-}))
 
 
 

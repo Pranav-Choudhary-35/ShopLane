@@ -11,11 +11,19 @@ if(!process.env.JWT_SECRET){
  throw new Error("JWT_SECRET IS NOT DEFINED IN ENVIORNMENT VARIABLES");
 }
 
+if(!process.env.GOOGLE_CLIENT_ID){
+   throw new Error("GOOGLE_CLIENT_ID IS NOT DEFINED IN EVVIRONMENTAL VARIABLES")
+}
 
+if(!process.env.GOOGLE_CLIENT_SECRET){
+   throw new Error("GOOGLE_CLIENT_SECRET IS NOT DEFINED IN EVVIRONMENTAL VARIABLES")
+}
 
 
 export const config={
    MONGO_URI: process.env.MONGO_URI,
    PORT:process.env.PORT,
-   JWT_SECRET:process.env.JWT_SECRET
+   JWT_SECRET:process.env.JWT_SECRET,
+   GOOGLE_CLIENT_ID:process.env.GOOGLE_CLIENT_ID,
+GOOGLE_CLIENT_SECRET:process.env.GOOGLE_CLIENT_SECRET
 };

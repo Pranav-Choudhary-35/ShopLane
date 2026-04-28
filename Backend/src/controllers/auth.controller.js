@@ -139,3 +139,11 @@ export async function login(req, res) {
     });
   }
 }
+
+
+ export async function googleCallback(req,res) {
+  console.log(req.user);
+
+  res.redirect("http://localhost:5173");
+  
+ }

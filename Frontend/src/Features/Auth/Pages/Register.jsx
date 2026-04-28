@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "../../hook/useAuth";
+import { useAuth } from "../hook/useAuth";
 import { useNavigate } from 'react-router-dom';
 
 
@@ -216,7 +216,7 @@ const Register = () => {
                                     value={formData.contactNumber}
                                     onChange={handleChange}
                                     required
-                                    placeholder="+91 98765 43210"
+                                    placeholder="98765 43210"
                                     className="w-full bg-transparent outline-none py-2 lg:py-3 text-xs lg:text-sm transition-colors duration-300 placeholder-zinc-700"
                                     style={inputStyle}
                                     onFocus={handleFocus}
@@ -315,6 +315,23 @@ const Register = () => {
                                     Register as Seller
                                 </span>
                             </label>
+
+                            {/* Continue with Google */}
+                            <a
+                                href="/api/auth/google"
+                                className="w-full py-2.5 lg:py-3.5 text-[9px] lg:text-[11px] uppercase tracking-[0.25em] font-medium transition-all duration-300 border border-[#FFC107] flex items-center justify-center"
+                                style={{ backgroundColor: 'transparent', color: '#FFC107', fontFamily: "'Inter', sans-serif", textDecoration: 'none' }}
+                                onMouseEnter={e => {
+                                    e.currentTarget.style.backgroundColor = '#FFC107';
+                                    e.currentTarget.style.color = '#050505';
+                                }}
+                                onMouseLeave={e => {
+                                    e.currentTarget.style.backgroundColor = 'transparent';
+                                    e.currentTarget.style.color = '#FFC107';
+                                }}
+                            >
+                                Continue with Google
+                            </a>
 
                             {/* Sign Up Button */}
                             <button

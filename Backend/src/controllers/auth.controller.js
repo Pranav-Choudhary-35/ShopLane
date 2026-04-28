@@ -35,12 +35,33 @@ export async function register(req, res) {
 
   try {
     const isUserExist = await userModel.findOne({
-      $or: [{ email }, { contact }],
+      $or: [{ email }, { contact }, { fullname }],
     });
 
     if (isUserExist) {
+      const errors = [];
+      if (isUserExist.email === email) {
+        errors.push({
+          param: 'email',
+          msg: 'Email already registered'
+        });
+      }
+      if (isUserExist.contact === contact) {
+        errors.push({
+          param: 'contact',
+          msg: 'Contact number already registered'
+        });
+      }
+      if (isUserExist.fullname === fullname) {
+        errors.push({
+          param: 'fullname',
+          msg: 'Username already taken'
+        });
+      }
       return res.status(400).json({
-        message: "Sorry this user is alread exist",
+        success: false,
+        message: errors.length > 0 ? errors.map(e => e.msg).join(', ') : 'User already exists',
+        errors: errors.length > 0 ? errors : [{ param: 'email', msg: 'User already exists' }]
       });
     }
 
@@ -54,7 +75,31 @@ export async function register(req, res) {
 
     await sendTokenResponse(user, res, "user register sucessfully");
   } catch (err) {
-    return res.status(500).json({ message: "Server Error" });
+    console.error('Register error:', err);
+    
+    // Handle MongoDB duplicate key errors
+    if (err.code === 11000) {
+      const field = Object.keys(err.keyPattern)[0];
+      const fieldMap = {
+        email: 'email',
+        contact: 'contact',
+        fullname: 'fullname',
+        password: 'password'
+      };
+      const param = fieldMap[field] || field;
+      
+      return res.status(400).json({
+        success: false,
+        message: `${field} already exists`,
+        errors: [{ param, msg: `${field} already registered` }]
+      });
+    }
+    
+    return res.status(500).json({ 
+      success: false,
+      message: "Server Error",
+      errors: [{ param: 'general', msg: 'Server Error' }]
+    });
   }
 }
 
@@ -63,21 +108,34 @@ export async function register(req, res) {
 export async function login(req, res) {
   const { email, password } = req.body;
 
-  const user = await userModel.findOne({ email });
+  try {
+    const user = await userModel.findOne({ email });
 
-  if (!isUserExist) {
-    return res.status(400).json({
-      message: "Invalid email or password",
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid email or password",
+        errors: [{ param: 'email', msg: 'Invalid email or password' }]
+      });
+    }
+
+    const isMatch = await user.comparePassword(password);
+
+    if (!isMatch) {
+      return res.status(400).json({ 
+        success: false,
+        message: "Invalid email or password",
+        errors: [{ param: 'password', msg: 'Invalid email or password' }]
+      });
+    }
+
+    await sendTokenResponse(user, res, "user logged in sucessfully");
+  } catch (err) {
+    console.error('Login error:', err);
+    return res.status(500).json({ 
+      success: false,
+      message: "Server Error",
+      errors: [{ param: 'general', msg: 'Server Error' }]
     });
   }
-
-  const isMatch = await user.comparePassword(password);
-
-  if (!isMatch) {
-    return res.status(400).json({ message: "invalid password" });
-  }
-
-await sendTokenResponse(user,res,"user logged in sucessfully")
-
-
 }

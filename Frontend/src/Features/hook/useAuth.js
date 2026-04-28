@@ -4,22 +4,56 @@ import { register ,login} from "../Auth/services/auth.api";
 
 import { useDispatch } from 'react-redux'
 import Login from "../Auth/Pages/Login";
+
 export const useAuth = () => {
 
     const dispatch = useDispatch();
     async function handleRegister({ email, contact, password, fullname, isSeller = false }) {
 
-        const data = await register({ email, contact, password, fullname, isSeller });
-        dispatch(setUser(data.user))
-
+        try {
+            const data = await register({ email, contact, password, fullname, isSeller });
+            dispatch(setUser(data.user));
+            return { success: true, user: data.user };
+        } catch (err) {
+            // Extract error response from axios error
+            const errorResponse = err.response?.data || {};
+            
+            console.error('Register API Error:', {
+                status: err.response?.status,
+                data: errorResponse
+            });
+            
+            // Build error object with validation errors and general message
+            const errorObj = {
+                errors: errorResponse.errors || [],
+                message: errorResponse.message || err.message || 'Registration failed'
+            };
+            
+            return { error: errorObj };
+        }
     }
-async function handleLogin({email,password}){
 
-    const data=await login({email,password});
-    dispatch(setUser(data.user))
-    return data.user
+    async function handleLogin({email,password}){
+        try {
+            const data = await login({email,password});
+            dispatch(setUser(data.user));
+            return { success: true, user: data.user };
+        } catch (err) {
+            console.error('Login API Error:', {
+                status: err.response?.status,
+                data: err.response?.data
+            });
+            
+            const errorResponse = err.response?.data || {};
+            
+            const errorObj = {
+                errors: errorResponse.errors || [],
+                message: errorResponse.message || err.message || 'Login failed'
+            };
+            
+            return { error: errorObj };
+        }
+    } 
 
-} 
-
-return { handleRegister,login }
+    return { handleRegister, handleLogin }
 }

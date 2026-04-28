@@ -11,21 +11,21 @@ app.use(morgan('dev'));
 //for store cookie/parse cookies
 app.use(cookieParser());
 
-//for read user data
-app.use(express.json());
 
 // for form data parsing
 app.use(express.urlencoded({extended:true}));
 
 //cros 
 app.use(cors({
-    origin:'https://localhost:5173',
+    origin:'http://localhost:5173',
     methods:["GET","POST","PUT","DELETE"],
     credentials:true
 }))
 
 
 
+//for read user data
+app.use(express.json());
 
 
 //set auth routes 

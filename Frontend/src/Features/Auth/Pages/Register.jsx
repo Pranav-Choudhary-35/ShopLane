@@ -15,6 +15,9 @@ const Register = () => {
         isSeller: false
     });
 
+    const [fieldErrors, setFieldErrors] = useState({});
+    const [generalError, setGeneralError] = useState('');
+
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
@@ -22,14 +25,56 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await handleRegister({
-            email: formData.email,
-            contact: formData.contactNumber,
-            password: formData.password,
-            isSeller: formData.isSeller,
-            fullname: formData.fullName
-        });
-        navigate("/");
+        
+        // Clear previous errors
+        setFieldErrors({});
+        setGeneralError('');
+
+        try {
+            const result = await handleRegister({
+                email: formData.email,
+                contact: formData.contactNumber,
+                password: formData.password,
+                isSeller: formData.isSeller,
+                fullname: formData.fullName
+            });
+
+            // Check if there was an error in the response
+            if (result?.error) {
+                // If we have validation/field errors
+                if (result.error.errors && Array.isArray(result.error.errors) && result.error.errors.length > 0) {
+                    const errors = {};
+                    let hasFieldErrors = false;
+                    
+                    // Map all validation errors to fieldErrors (express-validator uses 'param')
+                    result.error.errors.forEach(err => {
+                        if (err.param && err.param !== 'general') {
+                            errors[err.param] = err.msg;
+                            hasFieldErrors = true;
+                        }
+                    });
+                    
+                    // If we have field-specific errors, set them
+                    if (hasFieldErrors) {
+                        setFieldErrors(errors);
+                    } else if (result.error.message) {
+                        // Otherwise show general error
+                        setGeneralError(result.error.message);
+                    }
+                } else if (result.error.message) {
+                    // If no validation errors but has message, show as general error
+                    setGeneralError(result.error.message);
+                } else {
+                    // Fallback error message
+                    setGeneralError('Registration failed. Please try again.');
+                }
+            } else {
+                // Success - navigate to login
+                navigate("/login");
+            }
+        } catch (err) {
+            setGeneralError(err.message || "An error occurred during registration");
+        }
     };
 
     const inputStyle = {
@@ -104,6 +149,13 @@ const Register = () => {
                             </span>
                         </div>
 
+                        {/* General Error */}
+                        {generalError && (
+                            <div className="mb-6 p-3 lg:p-4 rounded bg-red-900/20 border border-red-700/50">
+                                <p className="text-red-400 text-xs lg:text-sm">{generalError}</p>
+                            </div>
+                        )}
+
                         {/* Header */}
                         <div className="mb-8">
                             <p
@@ -144,6 +196,9 @@ const Register = () => {
                                     onFocus={handleFocus}
                                     onBlur={handleBlur}
                                 />
+                                {fieldErrors.fullname && (
+                                    <p className="text-red-400 text-xs mt-1">{fieldErrors.fullname}</p>
+                                )}
                             </div>
 
                             {/* Contact Number */}
@@ -167,6 +222,9 @@ const Register = () => {
                                     onFocus={handleFocus}
                                     onBlur={handleBlur}
                                 />
+                                {fieldErrors.contact && (
+                                    <p className="text-red-400 text-xs mt-1">{fieldErrors.contact}</p>
+                                )}
                             </div>
 
                             {/* Email */}
@@ -190,6 +248,9 @@ const Register = () => {
                                     onFocus={handleFocus}
                                     onBlur={handleBlur}
                                 />
+                                {fieldErrors.email && (
+                                    <p className="text-red-400 text-xs mt-1">{fieldErrors.email}</p>
+                                )}
                             </div>
 
                             {/* Password */}
@@ -213,6 +274,9 @@ const Register = () => {
                                     onFocus={handleFocus}
                                     onBlur={handleBlur}
                                 />
+                                {fieldErrors.password && (
+                                    <p className="text-red-400 text-xs mt-1">{fieldErrors.password}</p>
+                                )}
                             </div>
 
                             {/* Register as Seller — minimal checkbox */}

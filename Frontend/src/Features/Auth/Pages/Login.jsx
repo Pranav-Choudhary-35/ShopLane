@@ -11,6 +11,9 @@ const Login = () => {
         password: ''
     });
 
+    const [fieldErrors, setFieldErrors] = useState({});
+    const [generalError, setGeneralError] = useState('');
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -18,11 +21,50 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await handleLogin({
-            email: formData.email,
-            password: formData.password
-        });
-        navigate("/");
+        
+        // Clear previous errors
+        setFieldErrors({});
+        setGeneralError('');
+
+        try {
+            const result = await handleLogin({
+                email: formData.email,
+                password: formData.password
+            });
+
+            // Check if there was an error
+            if (result?.error) {
+                // If we have validation/field errors
+                if (result.error.errors && Array.isArray(result.error.errors) && result.error.errors.length > 0) {
+                    const errors = {};
+                    let hasFieldErrors = false;
+                    
+                    // Map validation errors to fieldErrors
+                    result.error.errors.forEach(err => {
+                        if (err.param && err.param !== 'general') {
+                            errors[err.param] = err.msg;
+                            hasFieldErrors = true;
+                        }
+                    });
+                    
+                    // If we have field-specific errors, set them
+                    if (hasFieldErrors) {
+                        setFieldErrors(errors);
+                    } else if (result.error.message) {
+                        setGeneralError(result.error.message);
+                    }
+                } else if (result.error.message) {
+                    setGeneralError(result.error.message);
+                } else {
+                    setGeneralError('Login failed. Please try again.');
+                }
+            } else {
+                // Success - navigate to home
+                navigate("/");
+            }
+        } catch (err) {
+            setGeneralError(err.message || "An error occurred during login");
+        }
     };
 
     const inputStyle = {
@@ -97,6 +139,13 @@ const Login = () => {
                             </span>
                         </div>
 
+                        {/* General Error */}
+                        {generalError && (
+                            <div className="mb-6 p-3 lg:p-4 rounded bg-red-900/20 border border-red-700/50">
+                                <p className="text-red-400 text-xs lg:text-sm">{generalError}</p>
+                            </div>
+                        )}
+
                         {/* Header */}
                         <div className="mb-8">
                             <p
@@ -137,6 +186,9 @@ const Login = () => {
                                     onFocus={handleFocus}
                                     onBlur={handleBlur}
                                 />
+                                {fieldErrors.email && (
+                                    <p className="text-red-400 text-xs mt-1">{fieldErrors.email}</p>
+                                )}
                             </div>
 
                             {/* Password */}
@@ -160,6 +212,9 @@ const Login = () => {
                                     onFocus={handleFocus}
                                     onBlur={handleBlur}
                                 />
+                                {fieldErrors.password && (
+                                    <p className="text-red-400 text-xs mt-1">{fieldErrors.password}</p>
+                                )}
                             </div>
 
                             {/* Sign In Button */}

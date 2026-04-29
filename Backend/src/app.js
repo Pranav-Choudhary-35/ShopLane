@@ -6,6 +6,8 @@ import passport from 'passport'
 import {Strategy as GoogleStrategy} from "passport-google-oauth20"
 import { config } from 'dotenv';
 import cors from "cors";
+import productRouter from './routes/product.routes.js';
+
 
 const app=express();
 
@@ -53,6 +55,7 @@ app.use(express.json());
 app.use("/api/auth",authRouter);
 
 
+app.use("/api/products",productRouter);
 
 
 

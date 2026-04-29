@@ -4,7 +4,7 @@
 
 ShopLane is a modern, full-stack eCommerce web application featuring separate Buyer and Seller dashboards, product listings, shopping cart, secure authentication, and seamless checkout flow. Built with scalable backend APIs, role-based access control, and polished frontend UI to deliver a production-ready shopping experience.
 
-**Project Status**: Currently in active development - Authentication & User Management phase ✅
+**Project Status**: Currently in active development - Product Management phase (Phase 2) 🔄
 
 ---
 
@@ -45,6 +45,22 @@ This project is designed as a learning journey. Below is what we've completed so
 
 ---
 
+### Phase 2: Product Management 🔄 (IN PROGRESS)
+
+#### Backend Implementation:
+- ✅ **Product Model** - Mongoose schema with title, description, price, images, seller reference
+- ✅ **Product Controller** - `createProduct` function with image upload support
+- ✅ **Product Routes** - Protected POST endpoint for sellers
+- ✅ **Authentication Middleware** - `authenticateSeller` middleware for role-based access control
+- ✅ **Image Upload Service** - ImageKit integration for cloud storage of product images
+- ✅ **Multer Configuration** - Memory-based file upload handling (5MB limit, up to 7 images)
+- ⏳ Product listing & filtering
+- ⏳ GET product endpoints (single & all)
+- ⏳ Edit/Update product
+- ⏳ Delete product
+
+---
+
 ## 🏗️ Project Structure
 
 ```
@@ -58,12 +74,18 @@ SnitchEcommerce/
 │       │   ├── config.js            # Environment variables & validation
 │       │   └── database.js          # MongoDB connection setup
 │       ├── controllers/
-│       │   └── auth.controller.js   # Authentication logic (register, login, Google callback)
+│       │   ├── auth.controller.js   # Authentication logic (register, login, Google callback)
+│       │   └── product.controller.js # Product CRUD operations
 │       ├── models/
-│       │   └── user.model.js        # User schema with password hashing & comparison
+│       │   ├── user.model.js        # User schema with password hashing & comparison
+│       │   └── product.model.js     # Product schema with title, price, images, seller ref
 │       ├── routes/
-│       │   └── auth.routes.js       # Authentication endpoints
-│       ├── middleware/              # Coming soon: Auth middleware, role checks
+│       │   ├── auth.routes.js       # Authentication endpoints
+│       │   └── product.routes.js    # Product endpoints with multipart/form-data upload
+│       ├── middleware/
+│       │   └── auth.middleware.js   # authenticateSeller middleware for role-based access
+│       ├── services/
+│       │   └── storage.service.js   # ImageKit integration for image upload
 │       └── validator/
 │           └── auth.validator.js    # Request validation rules
 │
@@ -139,6 +161,7 @@ MONGO_URI=mongodb://localhost:27017/shoplane
 JWT_SECRET=your_jwt_secret_key_here
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
+IMAGE_KIT_PRIVATE_KEY=your_imagekit_private_key
 ```
 
 #### Frontend (.env file - if needed)
@@ -176,7 +199,7 @@ User → Registration Page → Backend Validation → Password Hash → MongoDB 
      ↓
 User → Login Page → Email/Password Verify → JWT Generated → Stored in Cookie/Local Storage
 ```
-
+ 
 **Files to Study**:
 - Backend: `auth.controller.js` (register/login logic)
 - Backend: `auth.routes.js` (route setup)
@@ -204,6 +227,20 @@ Redirect to Callback → Create/Update User → JWT Token → Redirect to Dashbo
 **Files to Study**:
 - Backend: `user.model.js` (schema definition)
 
+#### 4. **Product Creation & Image Upload** (New - Phase 2)
+```
+Seller → Product Creation Form → Validate Request → Upload Images to ImageKit
+       ↓
+Save Product with Image URLs → MongoDB → Return Product Data
+```
+
+**Files to Study**:
+- Backend: `product.model.js` (product schema)
+- Backend: `product.controller.js` (createProduct logic)
+- Backend: `product.routes.js` (route setup with multer)
+- Backend: `storage.service.js` (ImageKit upload service)
+- Backend: `auth.middleware.js` (authenticateSeller middleware)
+
 ---
 
 ## 🔑 Key Features Implemented
@@ -229,15 +266,17 @@ Redirect to Callback → Create/Update User → JWT Token → Redirect to Dashbo
 | POST | `/api/auth/login` | Login with credentials | ✅ Working |
 | GET | `/api/auth/google` | Initiate Google OAuth | ✅ Working |
 | GET | `/api/auth/google/callback` | Google OAuth callback | ✅ Working |
+| POST | `/api/products` | Create new product (Seller only, with images) | ✅ Working |
 
 ---
 
 ## 📋 What's Coming Next (Future Phases)
 
-### Phase 2: Product Management
-- Product model & schema
-- Seller product CRUD operations
+### Phase 2 (Continued): Product Management
 - Product listing & filtering
+- GET endpoints for fetching products
+- Edit/Update product functionality
+- Delete product functionality
 - Search functionality
 
 ### Phase 3: Shopping Cart & Orders
@@ -272,7 +311,9 @@ Redirect to Callback → Create/Update User → JWT Token → Redirect to Dashbo
 - **MVC Pattern** - Models, Controllers, Routes separation
 - **Error Handling** - Validation at multiple layers
 - **Environment Config** - Secure config management
-- **Middleware** - CORS, body parsing, cookie handling
+- **Middleware** - CORS, body parsing, cookie handling, authentication & authorization
+- **Role-Based Access Control** - `authenticateSeller` middleware protects seller endpoints
+- **Cloud Storage** - ImageKit integration for scalable image management
 
 ### Frontend Patterns Used
 - **Redux** - Centralized state management
@@ -301,6 +342,17 @@ Redirect to Callback → Create/Update User → JWT Token → Redirect to Dashbo
 1. On login page, click "Sign in with Google"
 2. Complete Google authentication
 3. Should create/update user and generate JWT
+
+### Test Product Creation (Seller)
+1. Login as a seller account
+2. Send POST request to `http://localhost:5000/api/products`
+3. Include multipart form data:
+   - `title`: Product name
+   - `description`: Product description
+   - `priceAmount`: Numeric price
+   - `priceCurrency`: Currency code (USD, EUR, INR, etc.)
+   - `images`: Upload up to 7 images (max 5MB each)
+4. Should return created product with image URLs from ImageKit
 
 ---
 
@@ -332,6 +384,17 @@ Redirect to Callback → Create/Update User → JWT Token → Redirect to Dashbo
 - Check CORS configuration in app.js
 - Verify API endpoint URLs in auth.api.js
 
+### Product creation returns 403 Forbidden
+- Ensure logged-in user has `role: "seller"`
+- Check that JWT token is being sent in cookies
+- Verify `authenticateSeller` middleware is properly set up
+
+### Image upload fails
+- Check IMAGE_KIT_PRIVATE_KEY is set in .env
+- Ensure images are under 5MB each
+- Maximum 7 images per request
+- Verify ImageKit credentials are valid
+
 ---
 
 ## 🎓 Learning Objectives
@@ -360,7 +423,8 @@ This project is created for learning and development purposes.
 ## 👨‍💻 Development Notes
 
 - **Last Updated**: April 2026
-- **Current Phase**: Authentication & User Management (Phase 1 - Complete)
-- **Next Focus**: Product Management & Listing
+- **Current Phase**: Product Management (Phase 2 - In Progress)
+- **Latest Addition**: Product creation with image upload to ImageKit
+- **Next Focus**: Product listing, filtering, and CRUD operations
 - **Code Style**: ES6+, Arrow functions, Async/Await
 - **Database**: MongoDB Atlas recommended for production

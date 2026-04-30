@@ -176,3 +176,20 @@ res.cookie("token",token);
   res.redirect("http://localhost:5173");
   
  }
+
+
+
+ export async function getMe(req,res){
+
+  const user=req.user;
+
+  res.status(200).json({
+    success:true,
+    user:{
+      email:user.email,
+      contact:user.contact,
+      fullname:user.fullname,
+      role:user.role,
+    }
+  })
+ }

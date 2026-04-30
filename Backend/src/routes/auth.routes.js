@@ -4,11 +4,14 @@ import { Router } from "express";
 import {
   login,
   register,
+  getMe,
   googleCallback,
 } from "../controllers/auth.controller.js";
 
 import { userValidator, loginValidator } from "../validator/auth.validator.js";
 import passport from "passport";
+import { authenticateUser } from "../middleware/auth.middleware.js";
+import { get } from "mongoose";
 
 const authRouter = Router();
 
@@ -25,5 +28,8 @@ authRouter.get(
   passport.authenticate("google", { session: false,failureRedirect:"http://localhost:5173/login" }),
   googleCallback,
 );
+
+
+authRouter.get("/me",authenticateUser,getMe)
 
 export default authRouter;

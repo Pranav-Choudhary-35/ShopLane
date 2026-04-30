@@ -3,6 +3,7 @@ import Register from '../Features/Auth/Pages/Register'
 import Login from '../Features/Auth/Pages/Login'
 import CreateProduct from '../Features/products/pages/CreateProduct'
 import Dashboard from '../Features/products/pages/Dashboard'
+import Protected from '../Features/Auth/Components/Protected'
 
 export const routes = createBrowserRouter([
 
@@ -23,11 +24,11 @@ export const routes = createBrowserRouter([
         children:[
             {
                 path: "/seller/dashboard",
-                element: <Dashboard />
+                element: <Protected role="seller"><Dashboard /></Protected>
             },
              {
         path: '/seller/create-product',
-        element: <CreateProduct />
+        element: <Protected role="seller"><CreateProduct /></Protected>
     },
         ]
 

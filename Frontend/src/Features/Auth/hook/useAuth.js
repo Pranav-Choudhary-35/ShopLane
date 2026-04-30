@@ -1,6 +1,6 @@
 import { setUser, setError, setLoading } from "../state/auth.slice";
 
-import { register ,login} from "../services/auth.api";
+import { register ,login,getMe} from "../services/auth.api";
 
 import { useDispatch } from 'react-redux'
 import Login from "../Pages/Login";
@@ -56,7 +56,31 @@ export const useAuth = () => {
     } 
 
 
+    async function handleGetMe() {
+        try {
+            dispatch(setLoading(true));
+            const data = await getMe();
+            dispatch(setUser(data.user));
+            
+            return { success: true, user: data.user };
+        } catch (err) {
+            console.error('Get Me API Error:', {
+                status: err.response?.status,
+                data: err.response?.data
+            });
 
+            const errorResponse = err.response?.data || {};
 
-    return { handleRegister, handleLogin }
+            const errorObj = {
+                errors: errorResponse.errors || [],
+                message: errorResponse.message || err.message || 'Failed to fetch user details'
+            };
+
+            return { error: errorObj };
+        }finally {
+            dispatch(setLoading(false));
+        }
+    }
+
+    return { handleRegister, handleLogin, handleGetMe };
 }

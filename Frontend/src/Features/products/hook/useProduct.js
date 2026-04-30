@@ -45,5 +45,5 @@ export const useProduct = () => {
 
 
 
-    return { fetchSellerProducts, handleCreateProduct }
+    return { handleCreateProduct ,fetchSellerProducts}
 }

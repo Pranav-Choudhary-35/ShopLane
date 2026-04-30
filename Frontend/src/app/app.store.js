@@ -6,6 +6,6 @@ import { configureStore } from "@reduxjs/toolkit";
 export const store = configureStore({
     reducer: {
         auth: authReducer,
-        products:productReducer
+        product:productReducer
     }
 })

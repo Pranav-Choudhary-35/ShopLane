@@ -41,3 +41,30 @@ export async function createProduct(req, res) {
         });
     }
 }
+
+
+
+export async function getSellerProducts(req, res) {
+  try {
+    const seller = req.user;
+    const products = await productModel.find({ seller: seller._id });
+
+    res.status(200).json({
+      success: true,
+      products
+    });
+  } catch (error) {
+    console.error(error);
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ 
+        success: false,
+        message: "Validation Error",
+        errors: Object.values(error.errors).map(err => ({ param: err.path, msg: err.message }))
+      });
+    }
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong"
+    });
+  }
+}

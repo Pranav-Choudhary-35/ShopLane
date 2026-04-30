@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../hook/useAuth";
 import { useNavigate } from "react-router-dom";
-import GoogleLogin from "../../Components/GoogleLogin";
+import GoogleLogin from "../Components/GoogleLogin";
 
 const Register = () => {
   const { handleRegister } = useAuth();
@@ -85,16 +85,16 @@ const Register = () => {
   };
 
   const inputStyle = {
-    color: "#ffffff",
-    borderBottom: "1px solid #333333",
+    color: "#1b1c1a",
+    borderBottom: "1px solid #d0c5b5",
     fontFamily: "'Inter', sans-serif",
   };
 
   const handleFocus = (e) => {
-    e.target.style.borderBottomColor = "#FFC107";
+    e.target.style.borderBottomColor = "#C9A96E";
   };
   const handleBlur = (e) => {
-    e.target.style.borderBottomColor = "#333333";
+    e.target.style.borderBottomColor = "#d0c5b5";
   };
 
   return (
@@ -106,47 +106,53 @@ const Register = () => {
       />
 
       <div
-        className="h-screen flex flex-col lg:flex-row selection:bg-[#FFC107]/30 overflow-hidden"
+        className="min-h-screen flex flex-col lg:flex-row selection:bg-[#C9A96E]/30"
         style={{
-          backgroundColor: "#050505",
+          backgroundColor: "#fbf9f6",
           fontFamily: "'Inter', sans-serif",
         }}
       >
         {/* ── LEFT: Editorial Image Panel ── */}
-        <div className="hidden lg:flex lg:w-1/2 relative bg-[#050505] overflow-hidden items-center justify-center">
+        <div
+          className="hidden lg:flex lg:w-1/2 relative overflow-hidden"
+          style={{ backgroundColor: "#f5f3f0" }}
+        >
           <img
-            src="/fashion-model.png"
-            alt="Snitch Fashion Editorial"
-            className="w-full h-full object-contain"
+            src="/shopelane_editorial_warm.png"
+            alt="ShopLane Fashion Editorial"
+            className="absolute inset-0 w-full h-full object-cover object-top"
+            style={{ filter: "brightness(0.97)" }}
           />
-          {/* Gradient to blend right edge seamlessly into the dark background */}
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(to right, transparent 0%, transparent 60%, #050505 100%)",
+                "linear-gradient(to top, rgba(27,24,20,0.62) 0%, rgba(27,24,20,0.08) 45%, transparent 100%)",
             }}
           />
-          <div className="absolute inset-0 p-8 lg:p-12 flex flex-col justify-between z-10 pointer-events-none">
+          <div className="absolute inset-0 p-14 flex flex-col justify-between z-10">
             <span
-              className="text-sm lg:text-lg font-medium tracking-[0.35em] uppercase"
+              className="text-sm font-medium tracking-[0.35em] uppercase"
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
-                color: "#FFC107",
+                color: "#C9A96E",
               }}
             >
-              SHOPLANE.
+              ShopLane.
             </span>
             <div>
               <p
-                className="text-3xl lg:text-5xl font-light leading-[1.08] text-white mb-3 lg:mb-5 drop-shadow-md"
+                className="text-5xl xl:text-6xl font-light leading-[1.08] text-white mb-5"
                 style={{ fontFamily: "'Cormorant Garamond', serif" }}
               >
                 Define your
                 <br />
                 <em>aesthetic.</em>
               </p>
-              <p className="text-xs lg:text-sm font-light leading-relaxed max-w-xs text-zinc-300 drop-shadow">
+              <p
+                className="text-sm font-light leading-relaxed max-w-xs"
+                style={{ color: "rgba(255,255,255,0.65)" }}
+              >
                 Join the exclusive movement of creators and brands redefining
                 the modern fashion landscape.
               </p>
@@ -156,20 +162,20 @@ const Register = () => {
 
         {/* ── RIGHT: Form Panel ── */}
         <div
-          className="w-full lg:w-1/2 flex items-center justify-center h-screen px-5 sm:px-8 lg:px-16 overflow-y-auto lg:overflow-y-hidden"
-          style={{ backgroundColor: "#050505" }}
+          className="w-full lg:w-1/2 flex items-center justify-center min-h-screen px-8 sm:px-14 lg:px-20 py-16 overflow-y-auto"
+          style={{ backgroundColor: "#fbf9f6" }}
         >
-          <div className="w-full max-w-sm py-8 lg:py-0">
+          <div className="w-full max-w-sm">
             {/* Mobile brand mark */}
-            <div className="lg:hidden mb-8">
+            <div className="lg:hidden mb-14">
               <span
-                className="text-lg tracking-[0.35em] uppercase"
+                className="text-sm tracking-[0.35em] uppercase"
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
-                  color: "#FFC107",
+                  color: "#C9A96E",
                 }}
               >
-                ShopeLane.
+                ShopLane.
               </span>
             </div>
 
@@ -183,18 +189,18 @@ const Register = () => {
             )}
 
             {/* Header */}
-            <div className="mb-8">
+            <div className="mb-12">
               <p
-                className="text-[10px] lg:text-[15px] uppercase tracking-[0.22em] mb-2 lg:mb-4 font-medium"
-                style={{ color: "#FFC107" }}
+                className="text-[10px] uppercase tracking-[0.22em] mb-4 font-medium"
+                style={{ color: "#C9A96E" }}
               >
                 Welcome to ShopLane
               </p>
               <h1
-                className="text-2xl sm:text-3xl lg:text-4xl font-light leading-[1.1]"
+                className="text-[2.6rem] xl:text-5xl font-light leading-[1.1]"
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
-                  color: "#ffffff",
+                  color: "#1b1c1a",
                 }}
               >
                 Elevate Your Style
@@ -202,15 +208,13 @@ const Register = () => {
             </div>
 
             {/* Form */}
-            <form
-              onSubmit={handleSubmit}
-              className="flex flex-col gap-5 lg:gap-6"
-            >
+            <form onSubmit={handleSubmit} className="flex flex-col gap-9">
               {/* Full Name */}
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-2">
                 <label
                   htmlFor="reg-fullName"
-                  className="text-[8px] lg:text-[10px] uppercase tracking-[0.18em] font-medium text-zinc-500"
+                  className="text-[10px] uppercase tracking-[0.18em] font-medium"
+                  style={{ color: "#7A6E63" }}
                 >
                   Full Name
                 </label>
@@ -222,7 +226,7 @@ const Register = () => {
                   onChange={handleChange}
                   required
                   placeholder="e.g. John Doe"
-                  className="w-full bg-transparent outline-none py-2 lg:py-3 text-xs lg:text-sm transition-colors duration-300 placeholder-zinc-700"
+                  className="w-full bg-transparent outline-none py-3 text-sm transition-colors duration-300"
                   style={inputStyle}
                   onFocus={handleFocus}
                   onBlur={handleBlur}
@@ -235,10 +239,11 @@ const Register = () => {
               </div>
 
               {/* Contact Number */}
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-2">
                 <label
                   htmlFor="reg-contact"
-                  className="text-[8px] lg:text-[10px] uppercase tracking-[0.18em] font-medium text-zinc-500"
+                  className="text-[10px] uppercase tracking-[0.18em] font-medium"
+                  style={{ color: "#7A6E63" }}
                 >
                   Contact Number
                 </label>
@@ -249,8 +254,8 @@ const Register = () => {
                   value={formData.contactNumber}
                   onChange={handleChange}
                   required
-                  placeholder="98765 43210"
-                  className="w-full bg-transparent outline-none py-2 lg:py-3 text-xs lg:text-sm transition-colors duration-300 placeholder-zinc-700"
+                  placeholder="+91 98765 43210"
+                  className="w-full bg-transparent outline-none py-3 text-sm transition-colors duration-300"
                   style={inputStyle}
                   onFocus={handleFocus}
                   onBlur={handleBlur}
@@ -263,10 +268,11 @@ const Register = () => {
               </div>
 
               {/* Email */}
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-2">
                 <label
                   htmlFor="reg-email"
-                  className="text-[8px] lg:text-[10px] uppercase tracking-[0.18em] font-medium text-zinc-500"
+                  className="text-[10px] uppercase tracking-[0.18em] font-medium"
+                  style={{ color: "#7A6E63" }}
                 >
                   Email Address
                 </label>
@@ -278,7 +284,7 @@ const Register = () => {
                   onChange={handleChange}
                   required
                   placeholder="hello@example.com"
-                  className="w-full bg-transparent outline-none py-2 lg:py-3 text-xs lg:text-sm transition-colors duration-300 placeholder-zinc-700"
+                  className="w-full bg-transparent outline-none py-3 text-sm transition-colors duration-300"
                   style={inputStyle}
                   onFocus={handleFocus}
                   onBlur={handleBlur}
@@ -291,10 +297,11 @@ const Register = () => {
               </div>
 
               {/* Password */}
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-2">
                 <label
                   htmlFor="reg-password"
-                  className="text-[8px] lg:text-[10px] uppercase tracking-[0.18em] font-medium text-zinc-500"
+                  className="text-[10px] uppercase tracking-[0.18em] font-medium"
+                  style={{ color: "#7A6E63" }}
                 >
                   Password
                 </label>
@@ -306,7 +313,7 @@ const Register = () => {
                   onChange={handleChange}
                   required
                   placeholder="••••••••"
-                  className="w-full bg-transparent outline-none py-2 lg:py-3 text-xs lg:text-sm transition-colors duration-300 placeholder-zinc-700"
+                  className="w-full bg-transparent outline-none py-3 text-sm transition-colors duration-300"
                   style={inputStyle}
                   onFocus={handleFocus}
                   onBlur={handleBlur}
@@ -321,7 +328,7 @@ const Register = () => {
               {/* Register as Seller — minimal checkbox */}
               <label
                 htmlFor="reg-isSeller"
-                className="flex items-center gap-3 cursor-pointer group"
+                className="flex items-center gap-4 cursor-pointer group"
               >
                 <div className="relative flex-shrink-0">
                   <input
@@ -334,24 +341,24 @@ const Register = () => {
                   />
                   {/* Custom checkbox */}
                   <div
-                    className="w-3.5 h-3.5 lg:w-4 lg:h-4 border transition-all duration-200 flex items-center justify-center peer-checked:border-[#FFC107]"
+                    className="w-4 h-4 border transition-all duration-200 flex items-center justify-center peer-checked:border-[#C9A96E]"
                     style={{
-                      borderColor: formData.isSeller ? "#FFC107" : "#333333",
+                      borderColor: formData.isSeller ? "#C9A96E" : "#d0c5b5",
                       backgroundColor: formData.isSeller
-                        ? "#FFC107"
+                        ? "#C9A96E"
                         : "transparent",
                     }}
                   >
                     {formData.isSeller && (
                       <svg
-                        className="w-2 h-2 lg:w-2.5 lg:h-2.5"
+                        className="w-2.5 h-2.5"
                         viewBox="0 0 12 12"
                         fill="none"
                       >
                         <path
                           d="M2 6l3 3 5-5"
-                          stroke="#050505"
-                          strokeWidth="2"
+                          stroke="#fbf9f6"
+                          strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         />
@@ -360,8 +367,8 @@ const Register = () => {
                   </div>
                 </div>
                 <span
-                  className="text-[9px] lg:text-[11px] uppercase tracking-[0.15em] transition-colors duration-200"
-                  style={{ color: formData.isSeller ? "#FFC107" : "#71717a" }}
+                  className="text-[11px] uppercase tracking-[0.15em] transition-colors duration-200"
+                  style={{ color: formData.isSeller ? "#C9A96E" : "#7A6E63" }}
                 >
                   Register as Seller
                 </span>
@@ -370,55 +377,61 @@ const Register = () => {
               {/* Sign Up Button */}
               <button
                 type="submit"
-                className="w-full py-2.5 lg:py-3.5 text-[9px] lg:text-[11px] uppercase tracking-[0.25em] font-medium transition-all duration-300 mt-1 border border-[#FFC107]"
+                className="w-full py-4 text-[11px] uppercase tracking-[0.25em] font-medium transition-all duration-300 mt-2"
                 style={{
-                  backgroundColor: "#FFC107",
-                  color: "#050505",
+                  backgroundColor: "#1b1c1a",
+                  color: "#fbf9f6",
                   fontFamily: "'Inter', sans-serif",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.color = "#FFC107";
+                  e.currentTarget.style.backgroundColor = "#C9A96E";
+                  e.currentTarget.style.color = "#1b1c1a";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "#FFC107";
-                  e.currentTarget.style.color = "#050505";
+                  e.currentTarget.style.backgroundColor = "#1b1c1a";
+                  e.currentTarget.style.color = "#fbf9f6";
                 }}
               >
                 Sign Up
               </button>
 
-              {/* Continue with Google */}
+              {/* Google SSO */}
               <GoogleLogin />
-              
+
               {/* Divider */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 <div
                   className="flex-1 h-px"
-                  style={{ backgroundColor: "#1f1f22" }}
+                  style={{ backgroundColor: "#e4e2df" }}
                 />
-                <span className="text-[8px] lg:text-[10px] uppercase tracking-[0.15em] text-zinc-600">
+                <span
+                  className="text-[10px] uppercase tracking-[0.15em]"
+                  style={{ color: "#B5ADA3" }}
+                >
                   or
                 </span>
                 <div
                   className="flex-1 h-px"
-                  style={{ backgroundColor: "#1f1f22" }}
+                  style={{ backgroundColor: "#e4e2df" }}
                 />
               </div>
 
               {/* Footer Link */}
-              <p className="text-center text-[9px] lg:text-[11px] text-zinc-500">
+              <p
+                className="text-center text-[11px]"
+                style={{ color: "#B5ADA3" }}
+              >
                 Already have an account?{" "}
                 <a
                   href="/login"
                   className="transition-colors duration-200"
                   style={{
-                    color: "#a1a1aa",
+                    color: "#7A6E63",
                     textDecoration: "underline",
                     textUnderlineOffset: "3px",
                   }}
-                  onMouseEnter={(e) => (e.target.style.color = "#FFC107")}
-                  onMouseLeave={(e) => (e.target.style.color = "#a1a1aa")}
+                  onMouseEnter={(e) => (e.target.style.color = "#C9A96E")}
+                  onMouseLeave={(e) => (e.target.style.color = "#7A6E63")}
                 >
                   Sign in
                 </a>

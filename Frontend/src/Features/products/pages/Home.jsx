@@ -1,11 +1,13 @@
 import { useProduct } from "../hook/useProduct"
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 
 const Home = () => {
   
   const products = useSelector((state) => state.product.products);
   const { fetchAllProducts } = useProduct();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -148,7 +150,11 @@ const Home = () => {
                   const imageUrl = product.images?.[0]?.url || "/shopelane_editorial_warm.png";
 
                   return (
-                    <article key={product._id} className="group cursor-pointer">
+                    <article
+                      key={product._id}
+                      onClick={() => navigate(`/product/${product._id}`)}
+                      className="group cursor-pointer"
+                    >
                       <div className="aspect-[4/5] overflow-hidden mb-5" style={{ backgroundColor: "#f5f3f0" }}>
                         <img
                           src={imageUrl}

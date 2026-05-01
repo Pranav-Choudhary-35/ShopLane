@@ -85,3 +85,27 @@ export async function getAllProducts(req,res){
         });
     }
 } 
+
+
+export async function getProductDetails(req,res){
+    try {
+        const {productId} = req.params;
+        const product = await productModel.findById(productId).populate('seller','name email');
+        if(!product){
+            return res.status(404).json({
+                success: false,
+                message: "Product not found"
+            });
+        }
+        res.status(200).json({
+            success: true,
+            product
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: "Something went wrong"
+        });
+    }
+}

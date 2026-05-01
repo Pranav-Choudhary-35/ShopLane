@@ -1,6 +1,6 @@
 import { setSellerProducts,setProducts } from "../state/productSlice";
 
-import { getSellerProducts,createProduct,getAllProducts } from "../services/product.api";
+import { getSellerProducts,getProductDetails,createProduct,getAllProducts } from "../services/product.api";
 
 
 import { useCallback } from "react";
@@ -48,8 +48,7 @@ export const useProduct = () => {
 const fetchAllProducts = useCallback(async function fetchAllProducts() {
     try {
         const data = await getAllProducts();
-        console.log(data);
-        
+     
         dispatch(setProducts(data.products));
     } catch (err) {
         console.error('Fetch All Products API Error:', {
@@ -59,7 +58,26 @@ const fetchAllProducts = useCallback(async function fetchAllProducts() {
     }
 }, [dispatch]);
 
+const fetchProductDetailsById = useCallback(async function fetchProductDetailsById(productId) {
+    try {
+        const data = await getProductDetails(productId);
+        return { success: true, product: data.product };
+    } catch (err) {
+        console.error('Fetch Product Details API Error:', {
+            status: err.response?.status,
+            data: err.response?.data
+        });
+        
+        const errorResponse = err.response?.data || {};
+        
+        const errorObj = {
+            errors: errorResponse.errors || [],
+            message: errorResponse.message || err.message || 'Fetch product details failed'
+        };
+        
+        return { error: errorObj };
+    }
+}, []); 
 
-
-    return { handleCreateProduct ,fetchSellerProducts,fetchAllProducts}
+    return { handleCreateProduct ,fetchSellerProducts,fetchAllProducts,fetchProductDetailsById}
 }

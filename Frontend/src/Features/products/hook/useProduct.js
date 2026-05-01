@@ -1,6 +1,6 @@
-import { setSellerProducts } from "../state/productSlice";
+import { setSellerProducts,setProducts } from "../state/productSlice";
 
-import { getSellerProducts,createProduct } from "../services/product.api";
+import { getSellerProducts,createProduct,getAllProducts } from "../services/product.api";
 
 
 import { useCallback } from "react";
@@ -45,6 +45,21 @@ export const useProduct = () => {
     }, [dispatch]);
 
 
+const fetchAllProducts = useCallback(async function fetchAllProducts() {
+    try {
+        const data = await getAllProducts();
+        console.log(data);
+        
+        dispatch(setProducts(data.products));
+    } catch (err) {
+        console.error('Fetch All Products API Error:', {
+            status: err.response?.status,
+            data: err.response?.data
+        });
+    }
+}, [dispatch]);
 
-    return { handleCreateProduct ,fetchSellerProducts}
+
+
+    return { handleCreateProduct ,fetchSellerProducts,fetchAllProducts}
 }

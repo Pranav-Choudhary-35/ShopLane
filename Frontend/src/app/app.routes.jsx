@@ -4,12 +4,14 @@ import Login from '../Features/Auth/Pages/Login'
 import CreateProduct from '../Features/products/pages/CreateProduct'
 import Dashboard from '../Features/products/pages/Dashboard'
 import Protected from '../Features/Auth/Components/Protected'
+import Home from '../Features/products/pages/Home'
+
 
 export const routes = createBrowserRouter([
 
     {
         path: '/',
-        element: <h1>home</h1>
+        element: <Home />
     },
    
     {

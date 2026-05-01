@@ -3,6 +3,7 @@ import { setSellerProducts } from "../state/productSlice";
 import { getSellerProducts,createProduct } from "../services/product.api";
 
 
+import { useCallback } from "react";
 import { useDispatch } from 'react-redux'
 
 export const useProduct = () => {
@@ -10,7 +11,7 @@ export const useProduct = () => {
     const dispatch = useDispatch();
 
 
-        async function handleCreateProduct(formData){
+    const handleCreateProduct = useCallback(async function handleCreateProduct(formData){
         try {
             const data = await createProduct(formData);
             return { success: true, product: data.product };
@@ -29,9 +30,9 @@ export const useProduct = () => {
             
             return { error: errorObj };
         }
-    }
+    }, []);
 
-    async function fetchSellerProducts() {
+    const fetchSellerProducts = useCallback(async function fetchSellerProducts() {
         try {
             const data = await getSellerProducts();
             dispatch(setSellerProducts(data.products));
@@ -41,7 +42,7 @@ export const useProduct = () => {
                 data: err.response?.data
             });
         }
-    }
+    }, [dispatch]);
 
 
 

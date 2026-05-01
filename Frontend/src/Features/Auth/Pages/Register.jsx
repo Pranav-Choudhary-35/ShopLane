@@ -55,8 +55,10 @@ const Register = () => {
 
           // Map all validation errors to fieldErrors (express-validator uses 'param')
           result.error.errors.forEach((err) => {
-            if (err.param && err.param !== "general") {
-              errors[err.param] = err.msg;
+            const field = err.param || err.path;
+
+            if (field && field !== "general") {
+              errors[field] = err.msg;
               hasFieldErrors = true;
             }
           });

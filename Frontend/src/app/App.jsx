@@ -9,7 +9,7 @@ function App() {
     const {handleGetMe} = useAuth();
     useEffect(() => {
         handleGetMe();
-    }, [])
+    }, [handleGetMe])
   return (
     <RouterProvider router={routes} >
       <h1 className="text-3xl font-bold underline">app</h1>

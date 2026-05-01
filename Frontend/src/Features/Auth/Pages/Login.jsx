@@ -46,8 +46,10 @@ const Login = () => {
 
           // Map validation errors to fieldErrors
           result.error.errors.forEach((err) => {
-            if (err.param && err.param !== "general") {
-              errors[err.param] = err.msg;
+            const field = err.param || err.path;
+
+            if (field && field !== "general") {
+              errors[field] = err.msg;
               hasFieldErrors = true;
             }
           });
@@ -64,8 +66,13 @@ const Login = () => {
           setGeneralError("Login failed. Please try again.");
         }
       } else {
-        // Success - navigate to home
-        navigate("/");
+        const role = result?.user?.role;
+
+        if (role === "seller") {
+          navigate("/seller/dashboard");
+        } else {
+          navigate("/");
+        }
       }
     } catch (err) {
       setGeneralError(err.message || "An error occurred during login");

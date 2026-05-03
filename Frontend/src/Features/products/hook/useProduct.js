@@ -79,5 +79,28 @@ const fetchProductDetailsById = useCallback(async function fetchProductDetailsBy
     }
 }, []); 
 
-    return { handleCreateProduct ,fetchSellerProducts,fetchAllProducts,fetchProductDetailsById}
+const addProductVariant = useCallback(async function addProductVariant(productId,formData){
+    try {
+        const data = await addProductVariant(productId,formData);
+        return { success: true, variant: data.variant };
+    } catch (err) {
+        console.error('Add Product Variant API Error:', {
+            status: err.response?.status,
+            data: err.response?.data
+        });
+        
+        const errorResponse = err.response?.data || {};
+        
+        const errorObj = {
+            errors: errorResponse.errors || [],
+            message: errorResponse.message || err.message || 'Add product variant failed'
+        };
+        
+        return { error: errorObj };
+    }
+}, []);
+
+
+
+    return { handleCreateProduct ,fetchSellerProducts,fetchAllProducts,fetchProductDetailsById,addProductVariant }
 }

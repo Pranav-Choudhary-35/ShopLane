@@ -90,13 +90,14 @@ export async function getAllProducts(req,res){
 export async function getProductDetails(req,res){
     try {
         const {productId} = req.params;
-        const product = await productModel.findById(productId).populate('seller','name email');
+        const product = await productModel.findById(productId);
         if(!product){
             return res.status(404).json({
                 success: false,
                 message: "Product not found"
             });
         }
+
         res.status(200).json({
             success: true,
             product
@@ -108,4 +109,43 @@ export async function getProductDetails(req,res){
             message: "Something went wrong"
         });
     }
+}
+
+export async function addProductVariant(req,res){
+
+const { productId } = req.params;
+
+const product = await productModel.findOne({
+    _id: productId,
+    seller: req.user._id
+});
+
+if(!product){
+    return res.status(404).json({
+        success: false,
+        message: "Product not found"
+    });
+}
+
+
+
+ const files=req.files;
+ const images=[];
+
+ if(files || files.length!==0){
+    (await Promise.all(files.map(async(file)=>{
+        const image=await uploadFile({
+            buffer:file.buffer,
+            fileName:file.originalname
+        });
+        return image;
+    }))).map(image=>images.push(image));
+ }
+
+const price=req.body.priceAmount
+const stock=req.body.stock;
+const attributes=JSON.parse(req.body.attributes || '{}');
+
+console.log(product,images,price,stock,attributes);
+
 }

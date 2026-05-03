@@ -38,3 +38,10 @@ export const getProductDetails = async (productId) => {
     return response.data;
     
     }
+
+export const addProductVariant = async (productId,formData) => {
+
+    const response = await productApiInstance.post(`/${productId}/variants`,formData)
+    return response.data;
+    
+    }

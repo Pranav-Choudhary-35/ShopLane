@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { ChevronLeft, ChevronRight, ShoppingBag } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
 import { useProduct } from "../hook/useProduct";
@@ -11,6 +11,7 @@ const ProductDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedImage, setSelectedImage] = useState(0);
+  const [selectedAttributes, setSelectedAttributes] = useState({});
 
   useEffect(() => {
     async function loadProductDetails() {
@@ -33,6 +34,11 @@ const ProductDetail = () => {
 
         setProduct(result.product);
         setSelectedImage(0);
+
+        // Initialize with first variant's attributes if variants exist
+        if (result.product?.variants?.length > 0) {
+          setSelectedAttributes(result.product.variants[0].attributes || {});
+        }
       } catch (err) {
         console.error("Error fetching product details:", err);
         setError("Unable to load product details right now.");
@@ -44,24 +50,88 @@ const ProductDetail = () => {
     loadProductDetails();
   }, [fetchProductDetailsById, productId]);
 
-  const displayImages = product?.images?.length
-    ? product.images.slice(0, 7)
-    : [{ url: "/shopelane_editorial_warm.png" }];
+  const activeVariant = useMemo(() => {
+    if (!product?.variants || product.variants.length === 0) return null;
+    return product.variants.find((v) => {
+      if (!v.attributes) return false;
+      const vKeys = Object.keys(v.attributes);
+      const sKeys = Object.keys(selectedAttributes);
+      const isMatch = vKeys.every((k) => v.attributes[k] === selectedAttributes[k]);
+      return vKeys.length === sKeys.length && isMatch;
+    });
+  }, [product, selectedAttributes]);
+
+  const availableAttributes = useMemo(() => {
+    if (!product?.variants) return {};
+    const attrs = {};
+    product.variants.forEach((variant) => {
+      if (variant.attributes) {
+        Object.entries(variant.attributes).forEach(([key, value]) => {
+          if (!attrs[key]) attrs[key] = new Set();
+          attrs[key].add(value);
+        });
+      }
+    });
+    Object.keys(attrs).forEach((key) => {
+      attrs[key] = Array.from(attrs[key]);
+    });
+    return attrs;
+  }, [product]);
+
+  useEffect(() => {
+    setSelectedImage(0);
+  }, [activeVariant]);
+
+  const handleAttributeChange = (attrName, value) => {
+    const newAttrs = { ...selectedAttributes, [attrName]: value };
+    const exactMatch = product.variants.find((v) => {
+      const vAttrs = v.attributes || {};
+      return (
+        Object.keys(newAttrs).every((k) => newAttrs[k] === vAttrs[k]) &&
+        Object.keys(vAttrs).every((k) => newAttrs[k] === vAttrs[k])
+      );
+    });
+
+    if (exactMatch) {
+      setSelectedAttributes(exactMatch.attributes);
+    } else {
+      const fallbackVariant = product.variants.find(
+        (v) => v.attributes && v.attributes[attrName] === value
+      );
+      if (fallbackVariant) {
+        setSelectedAttributes(fallbackVariant.attributes);
+      } else {
+        setSelectedAttributes(newAttrs);
+      }
+    }
+  };
+
+  const displayImages =
+    activeVariant?.images && activeVariant.images.length > 0
+      ? activeVariant.images
+      : product?.images?.length
+      ? product.images.slice(0, 7)
+      : [{ url: "/shopelane_editorial_warm.png" }];
+
   const hasMultipleImages = displayImages.length > 1;
-  const price = product?.price?.currency && product?.price?.amount != null
-    ? `${product.price.currency} ${product.price.amount.toLocaleString()}`
-    : "Price unavailable";
+
+  const displayPrice =
+    activeVariant?.price && activeVariant.price.amount != null
+      ? `${activeVariant.price.currency || product?.price?.currency} ${activeVariant.price.amount.toLocaleString()}`
+      : product?.price?.currency && product?.price?.amount != null
+      ? `${product.price.currency} ${product.price.amount.toLocaleString()}`
+      : "Price unavailable";
 
   const showPreviousImage = () => {
-    setSelectedImage((currentIndex) => (
+    setSelectedImage((currentIndex) =>
       currentIndex === 0 ? displayImages.length - 1 : currentIndex - 1
-    ));
+    );
   };
 
   const showNextImage = () => {
-    setSelectedImage((currentIndex) => (
+    setSelectedImage((currentIndex) =>
       currentIndex === displayImages.length - 1 ? 0 : currentIndex + 1
-    ));
+    );
   };
 
   return (
@@ -82,11 +152,11 @@ const ProductDetail = () => {
               className="w-10 h-10 flex items-center justify-center border border-[#e4e2df] transition-colors duration-200"
               style={{ color: "#6f6256", backgroundColor: "#fbf9f6" }}
               aria-label="Go back"
-              onMouseEnter={e => {
+              onMouseEnter={(e) => {
                 e.currentTarget.style.color = "#1b1c1a";
                 e.currentTarget.style.borderColor = "#d19a2e";
               }}
-              onMouseLeave={e => {
+              onMouseLeave={(e) => {
                 e.currentTarget.style.color = "#6f6256";
                 e.currentTarget.style.borderColor = "#e4e2df";
               }}
@@ -177,8 +247,8 @@ const ProductDetail = () => {
                         onClick={showPreviousImage}
                         className="absolute left-4 lg:left-6 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 border"
                         style={{ backgroundColor: "rgba(251,249,246,0.86)", borderColor: "#e4e2df", color: "#1b1c1a" }}
-                        onMouseEnter={e => e.currentTarget.style.backgroundColor = "#fbf9f6"}
-                        onMouseLeave={e => e.currentTarget.style.backgroundColor = "rgba(251,249,246,0.86)"}
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#fbf9f6")}
+                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(251,249,246,0.86)")}
                         aria-label="Previous image"
                       >
                         <ChevronLeft size={20} strokeWidth={1.2} />
@@ -189,8 +259,8 @@ const ProductDetail = () => {
                         onClick={showNextImage}
                         className="absolute right-4 lg:right-6 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 border"
                         style={{ backgroundColor: "rgba(251,249,246,0.86)", borderColor: "#e4e2df", color: "#1b1c1a" }}
-                        onMouseEnter={e => e.currentTarget.style.backgroundColor = "#fbf9f6"}
-                        onMouseLeave={e => e.currentTarget.style.backgroundColor = "rgba(251,249,246,0.86)"}
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#fbf9f6")}
+                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(251,249,246,0.86)")}
                         aria-label="Next image"
                       >
                         <ChevronRight size={20} strokeWidth={1.2} />
@@ -210,11 +280,56 @@ const ProductDetail = () => {
 
                 <div className="mb-8">
                   <span className="text-sm uppercase tracking-[0.2em] font-medium" style={{ color: "#1b1c1a" }}>
-                    {price}
+                    {displayPrice}
                   </span>
                 </div>
 
                 <div className="h-px w-full mb-8" style={{ backgroundColor: "#d6d1ca" }} />
+
+                {/* Variant Options */}
+                {Object.entries(availableAttributes).length > 0 && (
+                  <>
+                    {Object.entries(availableAttributes).map(([attrName, values]) => (
+                      <div key={attrName} className="mb-6">
+                        <h3 className="text-[10px] uppercase tracking-[0.24em] font-medium mb-3" style={{ color: "#d19a2e" }}>
+                          {attrName}
+                        </h3>
+                        <div className="flex flex-wrap gap-2">
+                          {values.map((val) => {
+                            const isSelected = selectedAttributes[attrName] === val;
+                            return (
+                              <button
+                                key={val}
+                                onClick={() => handleAttributeChange(attrName, val)}
+                                className={`px-4 py-2 text-[11px] uppercase tracking-[0.15em] font-medium transition-all duration-300 border ${
+                                  isSelected
+                                    ? "border-[#1b1c1a] bg-[#1b1c1a] text-[#fbf9f6]"
+                                    : "border-[#d0c5b5] text-[#1b1c1a] hover:border-[#1b1c1a]"
+                                }`}
+                                style={isSelected ? {} : { backgroundColor: "transparent" }}
+                              >
+                                {val}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                )}
+
+                {/* Stock Information */}
+                {activeVariant && activeVariant.stock !== undefined && (
+                  <div className="mb-6">
+                    <span
+                      className={`text-[10px] uppercase tracking-[0.2em] font-medium ${
+                        activeVariant.stock > 0 ? "text-green-700" : "text-red-700"
+                      }`}
+                    >
+                      {activeVariant.stock > 0 ? `${activeVariant.stock} in stock` : "Out of stock"}
+                    </span>
+                  </div>
+                )}
 
                 <div className="mb-12">
                   <h3 className="text-[10px] uppercase tracking-[0.24em] font-medium mb-4" style={{ color: "#d19a2e" }}>
@@ -234,11 +349,11 @@ const ProductDetail = () => {
                       color: "#fbf9f6",
                       fontFamily: "'Inter', sans-serif",
                     }}
-                    onMouseEnter={e => {
+                    onMouseEnter={(e) => {
                       e.currentTarget.style.backgroundColor = "#d19a2e";
                       e.currentTarget.style.color = "#1b1c1a";
                     }}
-                    onMouseLeave={e => {
+                    onMouseLeave={(e) => {
                       e.currentTarget.style.backgroundColor = "#171612";
                       e.currentTarget.style.color = "#fbf9f6";
                     }}
@@ -256,10 +371,10 @@ const ProductDetail = () => {
                       color: "#1b1c1a",
                       fontFamily: "'Inter', sans-serif",
                     }}
-                    onMouseEnter={e => {
+                    onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = "#d19a2e";
                     }}
-                    onMouseLeave={e => {
+                    onMouseLeave={(e) => {
                       e.currentTarget.style.borderColor = "#bda98f";
                     }}
                   >

@@ -1,6 +1,6 @@
 import { setSellerProducts,setProducts } from "../state/productSlice";
 
-import { getSellerProducts,getProductDetails,createProduct,getAllProducts } from "../services/product.api";
+import { getSellerProducts,getProductDetails,createProduct,getAllProducts, addProductVariant } from "../services/product.api";
 
 
 import { useCallback } from "react";
@@ -79,9 +79,9 @@ const fetchProductDetailsById = useCallback(async function fetchProductDetailsBy
     }
 }, []); 
 
-const addProductVariant = useCallback(async function addProductVariant(productId,formData){
+const handleAddProductVariant = useCallback(async function handleAddProductVariant(productId, variant) {
     try {
-        const data = await addProductVariant(productId,formData);
+        const data = await addProductVariant(productId, variant);
         return { success: true, variant: data.variant };
     } catch (err) {
         console.error('Add Product Variant API Error:', {
@@ -102,5 +102,5 @@ const addProductVariant = useCallback(async function addProductVariant(productId
 
 
 
-    return { handleCreateProduct ,fetchSellerProducts,fetchAllProducts,fetchProductDetailsById,addProductVariant }
+    return { handleCreateProduct, fetchSellerProducts, fetchAllProducts, fetchProductDetailsById, handleAddProductVariant }
 }

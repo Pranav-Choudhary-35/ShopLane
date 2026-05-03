@@ -8,11 +8,10 @@ import { config } from 'dotenv';
 import cors from "cors";
 import productRouter from './routes/product.routes.js';
 
-
 const app=express();
 
-// google auth setup
-
+// Google OAuth 2.0 Strategy Configuration
+// Handles the OAuth flow with Google and returns the user profile
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -22,31 +21,28 @@ passport.use(new GoogleStrategy({
   return done(null, profile);
 }));
 
-
+// CORS Configuration
+// Allows requests from frontend running on localhost:5173
 app.use(cors({
     origin: "http://localhost:5173",
     methods: [ "GET", "POST", "PUT", "DELETE" ],
     credentials: true
 }))
 
-
-
-
-
-//for api testing
+// Logging Middleware
+// Logs all HTTP requests in development format
 app.use(morgan('dev'));
 
-//for store cookie/parse cookies
+// Cookie Parser Middleware
+// Extracts and processes cookies from incoming requests
 app.use(cookieParser());
 
-
-// for form data parsing
+// URL Encoded Body Parser
+// Parses form data (application/x-www-form-urlencoded)
 app.use(express.urlencoded({extended:true}));
 
-
-
-
-//for read user data
+// JSON Body Parser
+// Parses JSON request bodies
 app.use(express.json());
 
 

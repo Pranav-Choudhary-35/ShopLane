@@ -2,9 +2,8 @@ import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import { config } from "../config/config.js";
 
-
-//Set token and token response
-
+// Helper function to generate JWT and send auth response
+// Creates a token, sets it in cookie, and returns user data to client
 async function sendTokenResponse(user, res, message) {
   const token = jwt.sign(
     {
@@ -28,8 +27,8 @@ async function sendTokenResponse(user, res, message) {
   });
 }
 
-//Register Controller
-
+// Handle new user registration with email, password, and role selection (buyer/seller)
+// Validates for duplicate email, contact, and username before creating user
 export async function register(req, res) {
   const { email, contact, password, fullname, isSeller } = req.body;
 
@@ -103,8 +102,8 @@ export async function register(req, res) {
   }
 }
 
-//Login Controller
-
+// Handle user login with email and password validation
+// Compares password with stored hash and generates JWT token
 export async function login(req, res) {
   const { email, password } = req.body;
 
@@ -140,8 +139,9 @@ export async function login(req, res) {
   }
 }
 
-
- export async function googleCallback(req,res) {
+// Handle Google OAuth callback after successful authentication
+// Creates new user if they don't exist, then redirects to frontend
+export async function googleCallback(req,res) {
    const {id,displayName,emails,photos}=req.user;
 const email=emails[0].value;
 const profilePic=photos[0].value;
@@ -157,30 +157,23 @@ user =await userModel.create({
   fullname:displayName,
 }) 
 
-
 const token =jwt.sign({
   id:user._id,
-
 },
 config.JWT_SECRET,
 {
   expiresIn:"7d"
 }
-
 )
 res.cookie("token",token);
-
-
 }
 
   res.redirect("http://localhost:5173");
-  
  }
 
-
-
- export async function getMe(req,res){
-
+// Fetch current authenticated user profile from JWT token
+// Used to retrieve user details after login or page refresh
+export async function getMe(req,res){
   const user=req.user;
 
   res.status(200).json({

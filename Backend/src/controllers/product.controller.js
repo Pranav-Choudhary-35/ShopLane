@@ -1,6 +1,8 @@
 import productModel from "../models/product.model.js";
 import { uploadFile } from "../services/storage.service.js";
 
+// Parse and validate variant attributes from form data
+// Converts string JSON to object and ensures it's a valid object
 function parseAttributes(rawAttributes) {
     if (!rawAttributes) {
         return {};
@@ -33,7 +35,8 @@ function parseAttributes(rawAttributes) {
     );
 }
 
-
+// Create a new product listing for authenticated seller
+// Handles image uploads to cloud storage and creates product record with base price and metadata
 export async function createProduct(req, res) {
     try {
         const { title, description, priceAmount, priceCurrency } = req.body;
@@ -74,8 +77,8 @@ export async function createProduct(req, res) {
     }
 }
 
-
-
+// Fetch all products created by the authenticated seller
+// Returns complete product list with variants and metadata
 export async function getSellerProducts(req, res) {
   try {
     const seller = req.user;
@@ -101,7 +104,8 @@ export async function getSellerProducts(req, res) {
   }
 }
 
-
+// Fetch all products from all sellers in the marketplace
+// Used for home page and product search/browse
 export async function getAllProducts(req,res){
     try {
         const products = await productModel.find();
@@ -118,7 +122,8 @@ export async function getAllProducts(req,res){
     }
 } 
 
-
+// Fetch detailed information for a single product including all variants
+// Returns product details with images, pricing, variants, and stock information
 export async function getProductDetails(req,res){
     try {
         const {productId} = req.params;
@@ -143,6 +148,8 @@ export async function getProductDetails(req,res){
     }
 }
 
+// Add a new variant to an existing product
+// Handles images upload and variant-specific pricing, stock, and attributes
 export async function addProductVariant(req,res){
     try {
         const { productId } = req.params;

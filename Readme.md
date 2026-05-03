@@ -1,430 +1,402 @@
-# ShopLane - Full-Stack eCommerce Application
+# Snitch Ecommerce - Full-Stack eCommerce Application
 
-## 📋 Project Overview
+## Project Overview
 
-ShopLane is a modern, full-stack eCommerce web application featuring separate Buyer and Seller dashboards, product listings, shopping cart, secure authentication, and seamless checkout flow. Built with scalable backend APIs, role-based access control, and polished frontend UI to deliver a production-ready shopping experience.
+Snitch is a full-stack eCommerce web application built for learning and development purposes. The application features separate Buyer and Seller functionality, product listings with variants, secure authentication, and image management. Built with modern JavaScript/Node.js technologies and scalable architecture patterns.
 
-**Project Status**: Currently in active development - Product Management phase (Phase 2) 🔄
-
----
-
-## 🎯 Learning Path & Progress
-
-This project is designed as a learning journey. Below is what we've completed so far and where you should focus your learning:
-
-### Phase 1: Authentication & User Management ✅ (COMPLETED)
-
-#### Backend Implementation:
-- ✅ **Express.js Server Setup** - RESTful API with proper middleware
-- ✅ **MongoDB Integration** - Mongoose ODM for data persistence
-- ✅ **User Model** - User schema with role-based access (buyer/seller), email, password, Google ID
-- ✅ **Authentication Routes**:
-  - `POST /api/auth/register` - User registration with validation
-  - `POST /api/auth/login` - Email/password login with JWT token generation
-  - `GET /api/auth/google` - Initiate Google OAuth flow
-  - `GET /api/auth/google/callback` - Handle Google OAuth callback
-- ✅ **Validation Layer** - Input validation using express-validator
-- ✅ **Password Security** - Bcrypt hashing for passwords
-- ✅ **JWT Authentication** - Secure token-based authentication
-- ✅ **Google OAuth 2.0** - Third-party authentication with Passport.js
-- ✅ **Environment Configuration** - Secure config management with validation
-
-#### Frontend Implementation:
-- ✅ **React + Vite Setup** - Fast development environment
-- ✅ **Redux Toolkit** - State management for auth state
-- ✅ **React Router** - Client-side routing
-- ✅ **TailwindCSS** - Utility-first styling
-- ✅ **Authentication Pages**:
-  - `Login.jsx` - Email/password login form with error handling
-  - `Register.jsx` - User registration form with validation
-- ✅ **Auth Hooks** - Custom `useAuth` hook for API communication
-- ✅ **Auth Slice** - Redux reducer for auth state management
-- ✅ **Google Login Component** - Official Google Sign-In button with proper branding
-- ✅ **Error Handling** - Field-level and general error displays
-- ✅ **Form Validation** - Client-side validation feedback
+Current Status: Product Management phase - Basic product creation and variant management working
 
 ---
 
-### Phase 2: Product Management 🔄 (IN PROGRESS)
+## What's Done So Far
 
-#### Backend Implementation:
-- ✅ **Product Model** - Mongoose schema with title, description, price, images, seller reference
-- ✅ **Product Controller** - `createProduct` function with image upload support
-- ✅ **Product Routes** - Protected POST endpoint for sellers
-- ✅ **Authentication Middleware** - `authenticateSeller` middleware for role-based access control
-- ✅ **Image Upload Service** - ImageKit integration for cloud storage of product images
-- ✅ **Multer Configuration** - Memory-based file upload handling (5MB limit, up to 7 images)
-- ⏳ Product listing & filtering
-- ⏳ GET product endpoints (single & all)
-- ⏳ Edit/Update product
-- ⏳ Delete product
+### Authentication & User Management (Completed)
+
+Backend:
+- Express.js server with proper middleware setup and error handling
+- MongoDB integration using Mongoose ODM
+- User model with role-based access control (buyer/seller)
+- Email/password authentication with bcrypt password hashing
+- JWT token generation and verification
+- Google OAuth 2.0 integration with Passport.js
+- Input validation using express-validator
+- Cookie-based token storage
+
+Frontend:
+- React + Vite development setup
+- Redux Toolkit for state management
+- React Router for client-side navigation
+- TailwindCSS for styling
+- Login and Registration pages with form validation
+- Google Sign-In button integration
+- Custom authentication hook for API calls
+- Error handling and display on forms
+
+### Product Management (In Progress)
+
+Backend:
+- Product data model with title, description, pricing, and seller reference
+- Product creation endpoint with image upload support
+- Product variant system (different sizes, colors with separate images/pricing)
+- ImageKit cloud storage integration for images
+- Multer configuration for file uploads (5MB limit, up to 7 images)
+- Authentication middleware for seller-only endpoints
+- Get products by seller, get all products, and get single product details
+- Add variant to product functionality
+
+Frontend:
+- Product creation form with image upload
+- Product detail page with variant selection
+- Product listing pages for buyers and sellers
+- Variant attribute display and selection UI
 
 ---
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 SnitchEcommerce/
 ├── Backend/
-│   ├── server.js                    # Main server entry point
-│   ├── package.json                 # Backend dependencies
+│   ├── server.js                    Main entry point
+│   ├── package.json                 Dependencies
 │   └── src/
-│       ├── app.js                   # Express app configuration with middleware
+│       ├── app.js                   Express setup and middleware
 │       ├── config/
-│       │   ├── config.js            # Environment variables & validation
-│       │   └── database.js          # MongoDB connection setup
+│       │   ├── config.js            Environment variables
+│       │   └── database.js          MongoDB connection
 │       ├── controllers/
-│       │   ├── auth.controller.js   # Authentication logic (register, login, Google callback)
-│       │   └── product.controller.js # Product CRUD operations
+│       │   ├── auth.controller.js   Login, register, OAuth callback
+│       │   └── product.controller.js Product CRUD and variants
 │       ├── models/
-│       │   ├── user.model.js        # User schema with password hashing & comparison
-│       │   └── product.model.js     # Product schema with title, price, images, seller ref
+│       │   ├── user.model.js        User schema
+│       │   └── product.model.js     Product and variant schema
 │       ├── routes/
-│       │   ├── auth.routes.js       # Authentication endpoints
-│       │   └── product.routes.js    # Product endpoints with multipart/form-data upload
+│       │   ├── auth.routes.js       Auth endpoints
+│       │   └── product.routes.js    Product endpoints
 │       ├── middleware/
-│       │   └── auth.middleware.js   # authenticateSeller middleware for role-based access
+│       │   └── auth.middleware.js   JWT verification and role checking
 │       ├── services/
-│       │   └── storage.service.js   # ImageKit integration for image upload
+│       │   └── storage.service.js   ImageKit upload handler
 │       └── validator/
-│           └── auth.validator.js    # Request validation rules
+│           ├── auth.validator.js    Request validation rules
+│           └── product.validator.js Product validation
 │
 ├── Frontend/
-│   ├── index.html                   # HTML entry point
-│   ├── package.json                 # Frontend dependencies
-│   ├── vite.config.js               # Vite configuration
-│   ├── eslint.config.js             # Code quality rules
-│   ├── public/                      # Static assets
+│   ├── index.html                   HTML entry
+│   ├── package.json                 Dependencies
+│   ├── vite.config.js               Build config
 │   └── src/
-│       ├── main.jsx                 # React app entry
+│       ├── main.jsx                 React entry point
 │       ├── app/
-│       │   ├── App.jsx              # Root component with routes
-│       │   ├── app.routes.jsx       # Route configuration (/, /login, /register)
-│       │   ├── app.store.js         # Redux store setup
-│       │   └── index.css            # Global styles
+│       │   ├── App.jsx              Root component
+│       │   ├── app.routes.jsx       Route definitions
+│       │   ├── app.store.js         Redux setup
+│       │   └── index.css            Global styles
 │       └── Features/
 │           ├── Auth/
-│           │   ├── Pages/
-│           │   │   ├── Login.jsx    # Login form component
-│           │   │   └── Register.jsx # Registration form component
-│           │   ├── hook/
-│           │   │   └── useAuth.js   # Custom hook for auth operations
-│           │   ├── services/
-│           │   │   └── auth.api.js  # API calls to backend
-│           │   └── state/
-│           │       └── auth.slice.js # Redux reducer for auth state
-│           └── Components/
-│               └── GoogleLogin.jsx  # Official Google Sign-In button
+│           │   ├── Pages/           Login and Register components
+│           │   ├── hook/            useAuth custom hook
+│           │   ├── services/        API calls
+│           │   └── state/           Redux auth reducer
+│           └── products/
+│               ├── pages/           Product pages
+│               ├── hook/            useProduct custom hook
+│               ├── services/        Product API calls
+│               └── state/           Redux product reducer
 │
-└── Readme.md                        # This file
-
+└── Readme.md                        This file
 ```
 
 ---
 
-## 🛠️ Tech Stack
+## Technology Stack
 
-### Backend
-- **Framework**: Express.js 5.2.1
-- **Database**: MongoDB with Mongoose 9.4.1
-- **Authentication**: 
-  - JWT (jsonwebtoken 9.0.3)
-  - Passport.js with Google OAuth 2.0
-- **Security**: bcryptjs for password hashing
-- **Validation**: express-validator 7.3.2
-- **Development**: Nodemon for hot reload
+Backend:
+- Express.js 5.2.1 - Web framework
+- MongoDB with Mongoose 9.4.1 - Database
+- JWT (jsonwebtoken 9.0.3) - Token authentication
+- Passport.js - OAuth 2.0 authentication
+- bcryptjs - Password hashing
+- express-validator - Input validation
+- Multer - File upload handling
+- ImageKit - Cloud image storage
 
-### Frontend
-- **Framework**: React 19.2.4
-- **Build Tool**: Vite 8.0.4
-- **State Management**: Redux Toolkit 2.11.2
-- **Routing**: React Router 7.14.2
-- **Styling**: TailwindCSS 4.2.4
-- **HTTP Client**: Axios 1.15.2
-- **Linting**: ESLint with React plugins
+Frontend:
+- React 19.2.4 - UI library
+- Vite 8.0.4 - Build tool and dev server
+- Redux Toolkit 2.11.2 - State management
+- React Router 7.14.2 - Routing
+- TailwindCSS 4.2.4 - Styling
+- Axios 1.15.2 - HTTP client
+- Lucide React - Icons
 
 ---
 
-## 🚀 Getting Started
+## Setting Up
 
 ### Prerequisites
-- Node.js 18+ and npm
-- MongoDB instance (local or Atlas)
-- Google OAuth credentials (for social login)
+- Node.js 18+ with npm
+- MongoDB (local or MongoDB Atlas)
+- Google OAuth credentials
+- ImageKit account for image storage
 
-### Environment Setup
+### Environment Variables
 
-#### Backend (.env file)
+Create `.env` in the Backend directory:
 ```
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/shoplane
-JWT_SECRET=your_jwt_secret_key_here
+MONGO_URI=mongodb://localhost:27017/snitch
+JWT_SECRET=your_secret_key_here
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
-IMAGE_KIT_PRIVATE_KEY=your_imagekit_private_key
+IMAGE_KIT_PRIVATE_KEY=your_imagekit_key
 ```
 
-#### Frontend (.env file - if needed)
-```
-VITE_API_URL=http://localhost:5000
-```
+### Running the Application
 
-### Installation & Running
-
-**Backend:**
+Backend:
 ```bash
 cd Backend
 npm install
 npm run dev
-# Server runs on http://localhost:5000
 ```
+Server starts at http://localhost:5000
 
-**Frontend:**
+Frontend:
 ```bash
 cd Frontend
 npm install
 npm run dev
-# App runs on http://localhost:5173
 ```
+App opens at http://localhost:5173
 
 ---
 
-## 📚 Learning Guide for Developers
+## How the Application Works
 
-### Understanding the Authentication Flow
+### User Registration and Login Flow
 
-#### 1. **Email/Password Authentication**
-```
-User → Registration Page → Backend Validation → Password Hash → MongoDB Save
-     ↓
-User → Login Page → Email/Password Verify → JWT Generated → Stored in Cookie/Local Storage
-```
- 
-**Files to Study**:
-- Backend: `auth.controller.js` (register/login logic)
-- Backend: `auth.routes.js` (route setup)
-- Frontend: `Login.jsx`, `Register.jsx` (UI components)
-- Frontend: `auth.api.js` (API calls)
+1. User goes to registration page and creates account
+2. Can choose to register as buyer or seller
+3. Password is hashed with bcrypt before saving
+4. On login, password is verified and JWT token is generated
+5. Token is stored in cookies for authenticated requests
 
-#### 2. **Google OAuth Flow**
-```
-User → Click "Sign in with Google" → Google Authentication
-     ↓
-Redirect to Callback → Create/Update User → JWT Token → Redirect to Dashboard
-```
+### Google OAuth Flow
 
-**Files to Study**:
-- Backend: `app.js` (Passport Google Strategy setup)
-- Backend: `auth.routes.js` (Google routes)
-- Backend: `auth.controller.js` (googleCallback function)
-- Frontend: `GoogleLogin.jsx` (Google Sign-In button)
+1. User clicks "Sign in with Google"
+2. Redirected to Google authentication page
+3. After approval, returns to callback endpoint
+4. System creates or updates user record
+5. JWT token is generated and stored
+6. Redirected to dashboard
 
-#### 3. **User Model & Roles**
-- **Buyer**: Standard user role for purchasing products
-- **Seller**: Enhanced role for creating and managing products
-- Default role: `buyer`
+### Product Creation (Seller)
 
-**Files to Study**:
-- Backend: `user.model.js` (schema definition)
+1. Seller navigates to product creation
+2. Uploads product title, description, base price, and up to 7 images
+3. Backend validates inputs and seller authorization
+4. Images uploaded to ImageKit cloud storage
+5. Product record created in MongoDB with image URLs
+6. Product appears in seller dashboard and marketplace
 
-#### 4. **Product Creation & Image Upload** (New - Phase 2)
-```
-Seller → Product Creation Form → Validate Request → Upload Images to ImageKit
-       ↓
-Save Product with Image URLs → MongoDB → Return Product Data
-```
+### Product Variants
 
-**Files to Study**:
-- Backend: `product.model.js` (product schema)
-- Backend: `product.controller.js` (createProduct logic)
-- Backend: `product.routes.js` (route setup with multer)
-- Backend: `storage.service.js` (ImageKit upload service)
-- Backend: `auth.middleware.js` (authenticateSeller middleware)
+1. Seller can add variants to existing product
+2. Variants can have different attributes (Size, Color, etc)
+3. Each variant has separate images, stock level, and pricing
+4. Buyers can select variants when viewing product
+5. Images and price update based on variant selection
 
 ---
 
-## 🔑 Key Features Implemented
+## API Endpoints
 
-### Security Features
-- ✅ Password hashing with bcrypt
-- ✅ JWT token-based authentication
-- ✅ Environment variable protection
-- ✅ CORS configuration
-- ✅ Password comparison for login
+### Authentication
+- POST /api/auth/register - Create account
+- POST /api/auth/login - Login with email/password
+- GET /api/auth/google - Start Google OAuth
+- GET /api/auth/google/callback - Handle Google callback
+- GET /api/auth/me - Get current user profile
 
-### Validation
-- ✅ Email format validation
-- ✅ Password strength requirements
-- ✅ Unique email constraint
-- ✅ Required field validation
-
-### API Endpoints (Authentication)
-
-| Method | Endpoint | Purpose | Status |
-|--------|----------|---------|--------|
-| POST | `/api/auth/register` | Register new user | ✅ Working |
-| POST | `/api/auth/login` | Login with credentials | ✅ Working |
-| GET | `/api/auth/google` | Initiate Google OAuth | ✅ Working |
-| GET | `/api/auth/google/callback` | Google OAuth callback | ✅ Working |
-| POST | `/api/products` | Create new product (Seller only, with images) | ✅ Working |
+### Products
+- POST /api/products - Create product (seller only)
+- GET /api/products - Get all products
+- GET /api/products/seller - Get seller's products (seller only)
+- GET /api/products/:productId - Get product details
+- POST /api/products/:productId/variants - Add variant (seller only)
 
 ---
 
-## 📋 What's Coming Next (Future Phases)
+## Understanding the Code
 
-### Phase 2 (Continued): Product Management
-- Product listing & filtering
-- GET endpoints for fetching products
-- Edit/Update product functionality
+### Backend Authentication Flow
+
+The authentication system works in layers:
+
+1. Routes receive request with validation middleware
+2. Controller validates credentials or OAuth response
+3. User model checks password or creates new user
+4. JWT token generated with 10-day expiration
+5. Token returned to frontend in cookie
+
+Important files to study:
+- auth.controller.js - Handles register, login, OAuth
+- auth.middleware.js - Verifies tokens and checks roles
+- user.model.js - Password hashing on save
+
+### Backend Product System
+
+Product management flow:
+
+1. Seller sends product data with images
+2. authenticateSeller middleware checks authorization
+3. Images uploaded to ImageKit via uploadFile service
+4. Product created in database with image URLs
+5. Variants added as nested documents in product
+
+Important files to study:
+- product.controller.js - Create, retrieve, and variant logic
+- product.model.js - Schema with variant support
+- storage.service.js - ImageKit integration
+- product.routes.js - Endpoint definitions
+
+### Frontend State Management
+
+Redux handles authentication and products:
+
+1. Auth slice stores user data and token
+2. Product slice stores product listings
+3. Hooks (useAuth, useProduct) manage API calls
+4. Components dispatch actions to update state
+5. Selectors provide computed values to components
+
+Important files to study:
+- auth.slice.js - Auth state and reducers
+- productSlice.js - Product state management
+- useAuth.js - Authentication API wrapper
+- useProduct.js - Product API wrapper
+
+---
+
+## What Still Needs Work
+
+Short term:
+- Product search and filtering
+- Edit/update existing products
 - Delete product functionality
-- Search functionality
+- Stock inventory management
+- Product reviews and ratings
 
-### Phase 3: Shopping Cart & Orders
-- Shopping cart state management
-- Order creation & management
-- Order history tracking
-- Inventory management
-
-### Phase 4: Dashboards
-- Buyer dashboard with order history
-- Seller dashboard with sales analytics
-- Product inventory management
-- Performance metrics
-
-### Phase 5: Checkout & Payments
+Medium term:
+- Shopping cart functionality
+- Order management system
+- Order history and tracking
 - Payment integration (Stripe/Razorpay)
-- Order confirmation emails
 - Invoice generation
-- Refund management
 
-### Phase 6: Additional Features
-- Product reviews & ratings
+Long term:
+- Buyer and seller dashboards
+- Analytics and reporting
 - Wishlist functionality
 - User profile management
 - Notifications system
 
 ---
 
-## 🔍 Code Quality & Best Practices
+## Common Development Tasks
 
-### Backend Patterns Used
-- **MVC Pattern** - Models, Controllers, Routes separation
-- **Error Handling** - Validation at multiple layers
-- **Environment Config** - Secure config management
-- **Middleware** - CORS, body parsing, cookie handling, authentication & authorization
-- **Role-Based Access Control** - `authenticateSeller` middleware protects seller endpoints
-- **Cloud Storage** - ImageKit integration for scalable image management
+### Testing Product Creation Locally
 
-### Frontend Patterns Used
-- **Redux** - Centralized state management
-- **Custom Hooks** - Reusable logic (useAuth)
-- **Component Composition** - Reusable components (GoogleLogin)
-- **Form Handling** - Controlled components with error states
-- **Routing** - Declarative route configuration
+1. Register as seller account
+2. Navigate to dashboard
+3. Click "Create Product"
+4. Fill title, description, price
+5. Upload images (max 5MB each)
+6. Click submit
+7. Should see product in seller dashboard
 
----
+### Testing Product Variant Addition
 
-## 🧪 Testing the Application
+1. From seller dashboard, click product
+2. Click "Add Variant" button
+3. Enter variant attributes (Size: M, etc)
+4. Upload variant images
+5. Set variant-specific price and stock
+6. Click save
+7. Variant appears on product detail page
 
-### Test Registration
-1. Navigate to `http://localhost:5173/register`
-2. Fill in email, password, and fullname
-3. Click Register
-4. Should redirect to login on success
+### Debugging Tips
 
-### Test Login
-1. Navigate to `http://localhost:5173/login`
-2. Enter registered email and password
-3. Click Login
-4. Token should be received and stored
-
-### Test Google Login
-1. On login page, click "Sign in with Google"
-2. Complete Google authentication
-3. Should create/update user and generate JWT
-
-### Test Product Creation (Seller)
-1. Login as a seller account
-2. Send POST request to `http://localhost:5000/api/products`
-3. Include multipart form data:
-   - `title`: Product name
-   - `description`: Product description
-   - `priceAmount`: Numeric price
-   - `priceCurrency`: Currency code (USD, EUR, INR, etc.)
-   - `images`: Upload up to 7 images (max 5MB each)
-4. Should return created product with image URLs from ImageKit
+- Check browser console for frontend errors
+- Check terminal for backend console logs
+- Verify environment variables are loaded
+- Ensure MongoDB connection is working
+- Check ImageKit credentials for upload issues
+- Verify user has seller role for protected endpoints
 
 ---
 
-## 📝 Important Notes for Learners
+## Code Quality Standards
 
-1. **Study the Flow**: Understand how data flows from Frontend → Backend → Database
-2. **Middleware Order**: In `app.js`, middleware order matters (CORS before routes)
-3. **Validation**: Both frontend and backend validation are important
-4. **Security**: Never expose secrets, always use environment variables
-5. **Async/Await**: Backend uses async functions; understand promises and error handling
-6. **Redux**: Frontend state is managed in Redux slices; study the auth.slice.js
+The codebase follows these patterns:
 
----
-
-## 📞 Common Issues & Solutions
-
-### Backend won't connect to MongoDB
-- Check MONGO_URI in .env
-- Ensure MongoDB is running
-- Check firewall/network settings
-
-### Google OAuth not working
-- Verify CLIENT_ID and CLIENT_SECRET in .env
-- Ensure callback URL is registered in Google Console
-- Check CORS origin is correct
-
-### Frontend can't reach Backend
-- Ensure both servers are running
-- Check CORS configuration in app.js
-- Verify API endpoint URLs in auth.api.js
-
-### Product creation returns 403 Forbidden
-- Ensure logged-in user has `role: "seller"`
-- Check that JWT token is being sent in cookies
-- Verify `authenticateSeller` middleware is properly set up
-
-### Image upload fails
-- Check IMAGE_KIT_PRIVATE_KEY is set in .env
-- Ensure images are under 5MB each
-- Maximum 7 images per request
-- Verify ImageKit credentials are valid
+- MVC architecture for organization
+- Async/await for asynchronous operations
+- Try-catch blocks for error handling
+- Middleware for cross-cutting concerns
+- Validation at route and controller levels
+- Environment variables for configuration
+- Comments on major functions and complex logic
 
 ---
 
-## 🎓 Learning Objectives
+## Important Security Notes
 
-By studying this project, you will learn:
-
-✅ Full-stack JavaScript/Node.js development  
-✅ Express.js server setup and middleware  
-✅ MongoDB database design and queries  
-✅ User authentication (JWT + OAuth)  
-✅ React components and hooks  
-✅ Redux state management  
-✅ Form validation and error handling  
-✅ RESTful API design  
-✅ Security best practices  
-✅ Production-ready code structure  
+- Never commit .env files
+- Always hash passwords before storage
+- Validate user input on backend
+- Use HTTPS in production
+- Implement rate limiting for API
+- Check user authorization for sensitive operations
+- Keep dependencies updated
+- Use environment variables for secrets
 
 ---
 
-## 📄 License
+## Testing the Application Manually
 
-This project is created for learning and development purposes.
+Basic workflow:
+1. Start backend server
+2. Start frontend dev server
+3. Register new account
+4. Login with credentials
+5. If seller, create a product
+6. View product on marketplace
+7. Add variant to product
+8. Check product detail with variant selection
 
 ---
 
-## 👨‍💻 Development Notes
+## Development Progress
 
-- **Last Updated**: April 2026
-- **Current Phase**: Product Management (Phase 2 - In Progress)
-- **Latest Addition**: Product creation with image upload to ImageKit
-- **Next Focus**: Product listing, filtering, and CRUD operations
-- **Code Style**: ES6+, Arrow functions, Async/Await
-- **Database**: MongoDB Atlas recommended for production
+Started: Basic authentication system
+Current: Product creation and variants
+Next: Shopping cart and orders
+
+Date last worked on: May 2026
+
+---
+
+## Notes for Contributors
+
+- Write clear commit messages
+- Comment complex business logic
+- Test manually before committing
+- Follow existing code patterns
+- Keep frontend and backend changes separate
+- Update this README when major features complete
+
+---
+
+For questions about specific parts of the code, look for comments in the files or check the controller/service files for the main business logic.

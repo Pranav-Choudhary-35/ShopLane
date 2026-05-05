@@ -53,6 +53,7 @@ app.use("/api/auth",authRouter);
 
 app.use("/api/products",productRouter);
 
+app.use("/api/cart",cartRouter);
 
 
 

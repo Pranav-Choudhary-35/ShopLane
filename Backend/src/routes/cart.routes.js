@@ -7,7 +7,7 @@ const cartRouter=express.Router();
 
 
 
-cartRouter.get("/add/:productId/:variantId",authenticateUser,validateAddToCart,addToCart)
+cartRouter.post("/add/:productId/:variantId",authenticateUser,validateAddToCart,addToCart)
 
 
 cartRouter.get("/",authenticateUser,getCart);

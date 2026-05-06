@@ -57,20 +57,23 @@ await cartModel.findOneAndUpdate(
         .json({ message: "Not enough stock available", success: false });
     }
 
+    // Find the variant and get its price, fallback to product price if not found
+    const variant = product.variants.find(v => v._id.toString() === variantId);
+    const price = (variant && variant.price) ? variant.price : product.price;
+
     cart.items.push({
       product: productId,
       variant: variantId,
       quantity,
+      price,
     });
 
     await cart.save();
 
-    return res.status(200).json({ message: "Product added to cart", success: true }); 
-  
+    return res.status(200).json({ message: "Product added to cart", success: true });
+  }
 
 };
-
-}
 
 
 

@@ -142,34 +142,34 @@ export async function login(req, res) {
 // Handle Google OAuth callback after successful authentication
 // Creates new user if they don't exist, then redirects to frontend
 export async function googleCallback(req,res) {
-   const {id,displayName,emails,photos}=req.user;
-const email=emails[0].value;
-const profilePic=photos[0].value;
+  const { id, displayName, emails, photos } = req.user;
+  const email = emails[0].value;
+  const profilePic = photos[0].value;
 
-let user=await userModel.findOne({
-  email
-})
+  let user = await userModel.findOne({ email });
 
-if(!user){
-user =await userModel.create({
-  email,
-  googleId:id,
-  fullname:displayName,
-}) 
+  if (!user) {
+    user = await userModel.create({
+      email,
+      googleId: id,
+      fullname: displayName,
+    });
+  }
 
-const token =jwt.sign({
-  id:user._id,
-},
-config.JWT_SECRET,
-{
-  expiresIn:"7d"
-}
-)
-res.cookie("token",token);
-}
+  // Always generate token and set cookie for both new and existing users
+  const token = jwt.sign(
+    {
+      id: user._id,
+    },
+    config.JWT_SECRET,
+    {
+      expiresIn: "7d",
+    }
+  );
+  res.cookie("token", token);
 
   res.redirect("http://localhost:5173");
- }
+}
 
 // Fetch current authenticated user profile from JWT token
 // Used to retrieve user details after login or page refresh

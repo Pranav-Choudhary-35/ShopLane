@@ -2,6 +2,9 @@ import { useEffect, useState, useMemo } from "react";
 import { ChevronLeft, ChevronRight, ShoppingBag } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
 import { useProduct } from "../hook/useProduct";
+import { useCart } from "../../cart/hook/useCart";
+import { useSelector } from "react-redux";
+
 
 const ProductDetail = () => {
   const { fetchProductDetailsById } = useProduct();
@@ -12,6 +15,12 @@ const ProductDetail = () => {
   const [error, setError] = useState("");
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedAttributes, setSelectedAttributes] = useState({});
+
+  const cart=useSelector((state)=>state.cart);
+  const {handleAddItem}=useCart();
+  
+  
+  
 
   useEffect(() => {
     async function loadProductDetails() {
@@ -134,6 +143,8 @@ const ProductDetail = () => {
     );
   };
 
+
+  console.log({product,activeVariant});
   return (
     <>
       <link
@@ -342,6 +353,10 @@ const ProductDetail = () => {
 
                 <div className="flex flex-col gap-4 mt-auto">
                   <button
+                  onClick={()=>{handleAddItem({
+                    productId:product._id,
+                    variantId:activeVariant._id
+                  })}}
                     type="button"
                     className="w-full py-4 flex items-center justify-center gap-3 text-[11px] uppercase tracking-[0.25em] font-medium transition-all duration-300"
                     style={{

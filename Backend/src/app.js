@@ -8,6 +8,9 @@ import { config } from 'dotenv';
 import cors from "cors";
 import productRouter from './routes/product.routes.js';
 
+import cartRouter from './routes/cart.routes.js';
+
+config();
 const app=express();
 
 // Google OAuth 2.0 Strategy Configuration

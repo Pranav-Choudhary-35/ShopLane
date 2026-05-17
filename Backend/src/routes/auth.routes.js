@@ -1,40 +1,37 @@
 import { Router } from "express";
-
-import {
-  login,
-  register,
-  getMe,
-  googleCallback,
-} from "../controllers/auth.controller.js";
-
-import { userValidator, loginValidator } from "../validator/auth.validator.js";
+import { validateRegisterUser, validateLoginUser } from "../validator/auth.validator.js";
+import { getMe, googleCallback, login, register } from "../controllers/auth.controller.js";
 import passport from "passport";
-import { authenticateUser } from "../middleware/auth.middleware.js";
+import { config } from "../config/config.js";
+import { authenticateUser } from "../middlewares/auth.middleware.js";
 
-const authRouter = Router();
+const router = Router();
 
-// POST /api/auth/register - Create new user account with email/password
-// Validates input and assigns buyer or seller role based on registration type
-authRouter.post("/register", userValidator, register);
 
-// POST /api/auth/login - Authenticate user with email and password
-// Returns JWT token and user details on successful login
-authRouter.post("/login", loginValidator, login);
 
-// GET /api/auth/google - Initiate Google OAuth authentication
-// Redirects to Google login page
-authRouter.get("/google", passport.authenticate('google', {scope:["profile","email"]}))
+router.post('/register', validateRegisterUser, register)
 
-// GET /api/auth/google/callback - Handle OAuth callback from Google
-// Creates user if new, generates JWT token, redirects to frontend
-authRouter.get(
-  "/google/callback",
-  passport.authenticate("google", { session: false, failureRedirect:"http://localhost:5173/login" }),
-  googleCallback,
-);
+router.post("/login", validateLoginUser, login)
 
-// GET /api/auth/me - Fetch current authenticated user profile
-// Protected route that requires valid JWT token in cookies
-authRouter.get("/me", authenticateUser, getMe)
 
-export default authRouter;
+// /api/auth/google
+router.get("/google",
+    passport.authenticate("google", { scope: [ "profile", "email" ] }))
+
+router.get("/google/callback",
+    passport.authenticate("google", {
+        session: false,
+        failureRedirect: config.NODE_ENV == "development" ? "http://localhost:5173/login" : "/login"
+    }),
+    googleCallback,
+)
+
+
+/**
+ * @route GET /api/auth/me
+ * @description Get the authenticated user's profile
+ * @access Private
+ */
+router.get('/me', authenticateUser, getMe)
+
+export default router;

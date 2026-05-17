@@ -1,8 +1,8 @@
-# Snitch Ecommerce - Full-Stack eCommerce Application
+# ShopLane Ecommerce - Full-Stack eCommerce Application
 
 ## Project Overview
 
-Snitch is a full-stack eCommerce web application built for learning and development purposes. The application features separate Buyer and Seller functionality, product listings with variants, secure authentication, and image management. Built with modern JavaScript/Node.js technologies and scalable architecture patterns.
+ShopLane is a full-stack eCommerce web application built for learning and development purposes. The application features separate Buyer and Seller functionality, product listings with variants, secure authentication, and image management. Built with modern JavaScript/Node.js technologies and scalable architecture patterns.
 
 Current Status: Product Management phase - Basic product creation and variant management working
 
@@ -55,7 +55,7 @@ Frontend:
 ## Project Structure
 
 ```
-SnitchEcommerce/
+ShopLane/
 ├── Backend/
 │   ├── server.js                    Main entry point
 │   ├── package.json                 Dependencies
@@ -145,7 +145,7 @@ Frontend:
 Create `.env` in the Backend directory:
 ```
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/snitch
+MONGO_URI=mongodb://localhost:27017/shoplane
 JWT_SECRET=your_secret_key_here
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret

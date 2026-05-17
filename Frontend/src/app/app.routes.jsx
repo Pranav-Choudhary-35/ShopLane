@@ -1,49 +1,71 @@
-import { createBrowserRouter } from 'react-router'
-import Register from '../Features/Auth/Pages/Register'
-import Login from '../Features/Auth/Pages/Login'
-import CreateProduct from '../Features/products/pages/CreateProduct'
-import Dashboard from '../Features/products/pages/Dashboard'
-import Protected from '../Features/Auth/Components/Protected'
-import Home from '../Features/products/pages/Home'
-import ProductDetail from '../Features/products/pages/ProductDetail'
-import SellerProductDetails from '../Features/products/pages/SellerProductDetails'
+import { createBrowserRouter } from "react-router";
+import Register from "../features/auth/pages/Register";
+import Login from "../features/auth/pages/Login";
+import CreateProduct from "../features/products/pages/CreateProduct";
+import Dashboard from "../features/products/pages/Dashboard";
+import Protected from "../features/auth/components/Protected";
+import Home from "../features/products/pages/Home";
+import ProductDetail from "../features/products/pages/ProductDetail";
+import SellerProductDetails from "../features/products/pages/SellerProductDetails";
+import Cart from "../features/cart/pages/Cart";
+import OrderSuccess from "../features/cart/pages/OrderSuccess";
+import AppLayout from "./AppLayout";
 
 export const routes = createBrowserRouter([
 
     {
-        path: '/',
-        element: <Home />
-    },
-   
-    
-    {
-        path: '/login',
-        element: <Login />
-    },
-    {
         path: "/register",
-        element: <Register />
-    },{
-        path:"/seller",
-        children:[
-            {
-                path: "/seller/dashboard",
-                element: <Protected role="seller"><Dashboard /></Protected>
-            },
-             {
-        path: '/seller/create-product',
-        element: <Protected role="seller"><CreateProduct /></Protected>
+        element: <Register />,
     },
     {
-        path: "/seller/product/:productId",
-        element: <Protected role="seller"><SellerProductDetails /></Protected>
-    }
+        path: "/login",
+        element: <Login />,
+    },
+    {
+        element: <AppLayout />,
+        children: [
+            {
+                path: "/",
+                element: <Home />,
+            },
+            {
+                path: "/product/:productId",
+                element: <ProductDetail />
+            },
+            {
+                path: "/cart",
+                element: <Protected> <Cart /></Protected>
+            },
+            {
+                path: "/order-success",
+                element: <OrderSuccess />
+            },
+            {
+                path: "/seller",
+                children: [
+                    {
+                        path: "/seller/create-product",
 
+                        element: <Protected role="seller" >
+                            <CreateProduct />
+                        </Protected>
+                    },
+                    {
+                        path: "/seller/dashboard",
+                        element: <Protected role="seller" >
+                            <Dashboard />
+                        </Protected>
+                    },
+                    {
+                        path: "/seller/product/:productId",
+                        element: <Protected role="seller" >
+                            <SellerProductDetails />
+                        </Protected>
+                    }
+                ]
+            }
         ]
-
-    },{
-        path:"/product/:productId",
-        element: <ProductDetail />
     }
+
 
 ])

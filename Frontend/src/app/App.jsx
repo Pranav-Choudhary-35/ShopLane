@@ -1,20 +1,28 @@
-import '../app/index.css'
+import './App.css'
 import { RouterProvider } from 'react-router'
 import { routes } from './app.routes'
-import { useAuth } from '../Features/Auth/hook/useAuth'
+import { useSelector } from 'react-redux'
+import { useAuth } from '../features/auth/hook/useAuth'
 import { useEffect } from 'react'
+
 
 function App() {
 
-    const {handleGetMe} = useAuth();
-    useEffect(() => {
-        handleGetMe();
-    }, [handleGetMe])
-  return (
-    <RouterProvider router={routes} >
-      <h1 className="text-3xl font-bold underline">app</h1>
 
-    </RouterProvider>
+  const { handleGetMe } = useAuth()
+
+  const user = useSelector(state => state.auth.user)
+
+  console.log(user)
+
+  useEffect(() => {
+    handleGetMe()
+  }, [])
+
+  return (
+    <>
+      <RouterProvider router={routes} />
+    </>
   )
 }
 

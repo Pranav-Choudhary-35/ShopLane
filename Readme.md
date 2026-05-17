@@ -1,402 +1,375 @@
-# ShopLane Ecommerce - Full-Stack eCommerce Application
+# ShopLane
 
-## Project Overview
-
-ShopLane is a full-stack eCommerce web application built for learning and development purposes. The application features separate Buyer and Seller functionality, product listings with variants, secure authentication, and image management. Built with modern JavaScript/Node.js technologies and scalable architecture patterns.
-
-Current Status: Product Management phase - Basic product creation and variant management working
+A full-stack eCommerce platform featuring dual-user roles (buyer/seller), dynamic product variants, secure authentication, and integrated payment processing. Built with modern technologies and production-ready architecture patterns.
 
 ---
 
-## What's Done So Far
+## Overview
 
-### Authentication & User Management (Completed)
+ShopLane demonstrates proficiency across the entire software development lifecycle. The platform enables sellers to create and manage products with multiple variants, while buyers browse, select variants, and complete purchases through secure payment integration. The application implements role-based access control, cloud-based image management, and real-time inventory tracking.
 
-Backend:
-- Express.js server with proper middleware setup and error handling
-- MongoDB integration using Mongoose ODM
-- User model with role-based access control (buyer/seller)
-- Email/password authentication with bcrypt password hashing
-- JWT token generation and verification
-- Google OAuth 2.0 integration with Passport.js
-- Input validation using express-validator
-- Cookie-based token storage
-
-Frontend:
-- React + Vite development setup
-- Redux Toolkit for state management
-- React Router for client-side navigation
-- TailwindCSS for styling
-- Login and Registration pages with form validation
-- Google Sign-In button integration
-- Custom authentication hook for API calls
-- Error handling and display on forms
-
-### Product Management (In Progress)
-
-Backend:
-- Product data model with title, description, pricing, and seller reference
-- Product creation endpoint with image upload support
-- Product variant system (different sizes, colors with separate images/pricing)
-- ImageKit cloud storage integration for images
-- Multer configuration for file uploads (5MB limit, up to 7 images)
-- Authentication middleware for seller-only endpoints
-- Get products by seller, get all products, and get single product details
-- Add variant to product functionality
-
-Frontend:
-- Product creation form with image upload
-- Product detail page with variant selection
-- Product listing pages for buyers and sellers
-- Variant attribute display and selection UI
-
----
-
-## Project Structure
-
-```
-ShopLane/
-├── Backend/
-│   ├── server.js                    Main entry point
-│   ├── package.json                 Dependencies
-│   └── src/
-│       ├── app.js                   Express setup and middleware
-│       ├── config/
-│       │   ├── config.js            Environment variables
-│       │   └── database.js          MongoDB connection
-│       ├── controllers/
-│       │   ├── auth.controller.js   Login, register, OAuth callback
-│       │   └── product.controller.js Product CRUD and variants
-│       ├── models/
-│       │   ├── user.model.js        User schema
-│       │   └── product.model.js     Product and variant schema
-│       ├── routes/
-│       │   ├── auth.routes.js       Auth endpoints
-│       │   └── product.routes.js    Product endpoints
-│       ├── middleware/
-│       │   └── auth.middleware.js   JWT verification and role checking
-│       ├── services/
-│       │   └── storage.service.js   ImageKit upload handler
-│       └── validator/
-│           ├── auth.validator.js    Request validation rules
-│           └── product.validator.js Product validation
-│
-├── Frontend/
-│   ├── index.html                   HTML entry
-│   ├── package.json                 Dependencies
-│   ├── vite.config.js               Build config
-│   └── src/
-│       ├── main.jsx                 React entry point
-│       ├── app/
-│       │   ├── App.jsx              Root component
-│       │   ├── app.routes.jsx       Route definitions
-│       │   ├── app.store.js         Redux setup
-│       │   └── index.css            Global styles
-│       └── Features/
-│           ├── Auth/
-│           │   ├── Pages/           Login and Register components
-│           │   ├── hook/            useAuth custom hook
-│           │   ├── services/        API calls
-│           │   └── state/           Redux auth reducer
-│           └── products/
-│               ├── pages/           Product pages
-│               ├── hook/            useProduct custom hook
-│               ├── services/        Product API calls
-│               └── state/           Redux product reducer
-│
-└── Readme.md                        This file
-```
+**Key Features:**
+- Dual authentication (JWT + Google OAuth 2.0)
+- Role-based access control (buyer/seller)
+- Multi-variant product management with distinct pricing and inventory
+- Cloud image storage with Multer + ImageKit
+- Shopping cart with real-time stock validation
+- Payment processing with Razorpay integration
+- Production-ready error handling and input validation
 
 ---
 
 ## Technology Stack
 
-Backend:
-- Express.js 5.2.1 - Web framework
-- MongoDB with Mongoose 9.4.1 - Database
-- JWT (jsonwebtoken 9.0.3) - Token authentication
-- Passport.js - OAuth 2.0 authentication
-- bcryptjs - Password hashing
-- express-validator - Input validation
-- Multer - File upload handling
-- ImageKit - Cloud image storage
-
-Frontend:
-- React 19.2.4 - UI library
-- Vite 8.0.4 - Build tool and dev server
-- Redux Toolkit 2.11.2 - State management
-- React Router 7.14.2 - Routing
-- TailwindCSS 4.2.4 - Styling
-- Axios 1.15.2 - HTTP client
-- Lucide React - Icons
+| Category | Technologies |
+|----------|---------------|
+| **Backend** | Node.js, Express.js 5.2, MongoDB, Mongoose 9.4 |
+| **Authentication** | JWT, Passport.js (OAuth 2.0), bcryptjs |
+| **Frontend** | React 19.2, Vite 8.0, Redux Toolkit 2.11, React Router 7.14 |
+| **Styling & UI** | TailwindCSS 4.2, Lucide React Icons |
+| **Infrastructure** | Multer (file uploads), ImageKit (cloud storage), Razorpay (payments) |
+| **Validation** | express-validator, custom middleware |
 
 ---
 
-## Setting Up
+## Architecture & Design Patterns
 
-### Prerequisites
-- Node.js 18+ with npm
-- MongoDB (local or MongoDB Atlas)
-- Google OAuth credentials
-- ImageKit account for image storage
-
-### Environment Variables
-
-Create `.env` in the Backend directory:
+### Backend Structure (MVC)
 ```
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/shoplane
-JWT_SECRET=your_secret_key_here
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-IMAGE_KIT_PRIVATE_KEY=your_imagekit_key
+src/
+├── config/         Database, environment configuration
+├── controllers/    Business logic (auth, products, cart, payments)
+├── models/         MongoDB schemas with relationships
+├── routes/         Endpoint definitions with middleware
+├── middlewares/    Authentication, authorization, error handling
+├── services/       Third-party integrations (ImageKit, Razorpay)
+├── validator/      Input validation rules (express-validator)
+└── dao/            Data access operations
 ```
 
-### Running the Application
-
-Backend:
-```bash
-cd Backend
-npm install
-npm run dev
+### Frontend Architecture
 ```
-Server starts at http://localhost:5000
-
-Frontend:
-```bash
-cd Frontend
-npm install
-npm run dev
+src/
+├── app/
+│   ├── App.jsx             Root component
+│   ├── app.routes.jsx      Route configuration
+│   ├── app.store.js        Redux store setup
+│   └── AppLayout.jsx       Layout wrapper
+└── features/
+    ├── auth/               Authentication module (Redux, hooks, API)
+    ├── products/           Product module (CRUD operations, variants)
+    ├── cart/               Cart module (inventory, checkout)
+    └── Shared/             Reusable components
 ```
-App opens at http://localhost:5173
 
 ---
 
-## How the Application Works
+## Core Implementation
 
-### User Registration and Login Flow
+### Authentication System
+- Email/password registration with bcrypt hashing
+- JWT token generation (7-day expiration)
+- Google OAuth 2.0 integration with automatic user creation
+- Role-based middleware for endpoint protection
+- Cookie-based token persistence
 
-1. User goes to registration page and creates account
-2. Can choose to register as buyer or seller
-3. Password is hashed with bcrypt before saving
-4. On login, password is verified and JWT token is generated
-5. Token is stored in cookies for authenticated requests
+### Product Management
+- **Create:** Sellers upload products with metadata and images (up to 7)
+- **Variants:** Distinct pricing, stock levels, and attributes per variant
+- **Display:** Buyers view variants with dynamic image/price updates
+- **Authorization:** Seller-only endpoints protected by middleware
+- **Storage:** CloudKit integration for scalable image management
 
-### Google OAuth Flow
+### Shopping Cart
+- Real-time inventory validation during add/update operations
+- Stock depletion checks to prevent overselling
+- Persistent cart retrieval with populated product details
+- Quantity increment with stock availability verification
 
-1. User clicks "Sign in with Google"
-2. Redirected to Google authentication page
-3. After approval, returns to callback endpoint
-4. System creates or updates user record
-5. JWT token is generated and stored
-6. Redirected to dashboard
-
-### Product Creation (Seller)
-
-1. Seller navigates to product creation
-2. Uploads product title, description, base price, and up to 7 images
-3. Backend validates inputs and seller authorization
-4. Images uploaded to ImageKit cloud storage
-5. Product record created in MongoDB with image URLs
-6. Product appears in seller dashboard and marketplace
-
-### Product Variants
-
-1. Seller can add variants to existing product
-2. Variants can have different attributes (Size, Color, etc)
-3. Each variant has separate images, stock level, and pricing
-4. Buyers can select variants when viewing product
-5. Images and price update based on variant selection
+### Payment Processing
+- Razorpay order creation with formatted amounts
+- Payment verification using Razorpay utilities
+- Order persistence post-payment
+- Success/failure callbacks with proper error handling
 
 ---
 
 ## API Endpoints
 
-### Authentication
-- POST /api/auth/register - Create account
-- POST /api/auth/login - Login with email/password
-- GET /api/auth/google - Start Google OAuth
-- GET /api/auth/google/callback - Handle Google callback
-- GET /api/auth/me - Get current user profile
+**Authentication**
+| Method | Endpoint | Access |
+|--------|----------|--------|
+| POST | `/api/auth/register` | Public |
+| POST | `/api/auth/login` | Public |
+| GET | `/api/auth/google` | Public (OAuth initiation) |
+| GET | `/api/auth/google/callback` | Public (OAuth callback) |
+| GET | `/api/auth/me` | Protected |
 
-### Products
-- POST /api/products - Create product (seller only)
-- GET /api/products - Get all products
-- GET /api/products/seller - Get seller's products (seller only)
-- GET /api/products/:productId - Get product details
-- POST /api/products/:productId/variants - Add variant (seller only)
+**Products**
+| Method | Endpoint | Access |
+|--------|----------|--------|
+| POST | `/api/products` | Protected (Seller) |
+| GET | `/api/products` | Public |
+| GET | `/api/products/seller` | Protected (Seller) |
+| GET | `/api/products/detail/:id` | Public |
+| POST | `/api/products/:id/variants` | Protected (Seller) |
 
----
-
-## Understanding the Code
-
-### Backend Authentication Flow
-
-The authentication system works in layers:
-
-1. Routes receive request with validation middleware
-2. Controller validates credentials or OAuth response
-3. User model checks password or creates new user
-4. JWT token generated with 10-day expiration
-5. Token returned to frontend in cookie
-
-Important files to study:
-- auth.controller.js - Handles register, login, OAuth
-- auth.middleware.js - Verifies tokens and checks roles
-- user.model.js - Password hashing on save
-
-### Backend Product System
-
-Product management flow:
-
-1. Seller sends product data with images
-2. authenticateSeller middleware checks authorization
-3. Images uploaded to ImageKit via uploadFile service
-4. Product created in database with image URLs
-5. Variants added as nested documents in product
-
-Important files to study:
-- product.controller.js - Create, retrieve, and variant logic
-- product.model.js - Schema with variant support
-- storage.service.js - ImageKit integration
-- product.routes.js - Endpoint definitions
-
-### Frontend State Management
-
-Redux handles authentication and products:
-
-1. Auth slice stores user data and token
-2. Product slice stores product listings
-3. Hooks (useAuth, useProduct) manage API calls
-4. Components dispatch actions to update state
-5. Selectors provide computed values to components
-
-Important files to study:
-- auth.slice.js - Auth state and reducers
-- productSlice.js - Product state management
-- useAuth.js - Authentication API wrapper
-- useProduct.js - Product API wrapper
+**Cart & Payment**
+| Method | Endpoint | Access |
+|--------|----------|--------|
+| POST | `/api/cart/add/:productId/:variantId` | Protected |
+| GET | `/api/cart` | Protected |
+| PATCH | `/api/cart/quantity/increment/:productId/:variantId` | Protected |
+| POST | `/api/cart/payment/create/order` | Protected |
+| POST | `/api/cart/payment/verify/order` | Protected |
 
 ---
 
-## What Still Needs Work
+## Key Implementation Details
 
-Short term:
-- Product search and filtering
-- Edit/update existing products
-- Delete product functionality
-- Stock inventory management
-- Product reviews and ratings
+### Security & Validation
+- **Input Validation:** express-validator at route and controller levels
+- **Password Security:** bcryptjs with automatic pre-save hashing
+- **Authorization:** Middleware-based role checking for protected routes
+- **CORS:** Configured for development with credential support
+- **Token Security:** JWT stored in HTTP-only cookies
 
-Medium term:
-- Shopping cart functionality
-- Order management system
+### Error Handling
+- Try-catch blocks in async operations
+- Structured error responses with status codes
+- Validation error propagation
+- Stock validation error messages with quantities
+
+### Data Relationships
+- Users → Products (seller reference)
+- Products → Variants (nested documents)
+- Cart → Products/Variants (with pricing snapshots)
+- Cart → Orders → Payments (transaction history)
+
+---
+
+## Setup & Deployment
+
+### Prerequisites
+```
+Node.js 18+
+MongoDB (local or Atlas)
+ImageKit account
+Razorpay account
+Google OAuth credentials
+```
+
+### Environment Configuration
+
+**Backend** - Create `.env` in Backend directory:
+```env
+PORT=5000
+MONGO_URI=mongodb+srv://user:pass@cluster.mongodb.net/shoplane
+JWT_SECRET=your_secret_key_32_chars_minimum
+NODE_ENV=development
+
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+IMAGE_KIT_PUBLIC_KEY=your_imagekit_public_key
+IMAGE_KIT_PRIVATE_KEY=your_imagekit_private_key
+IMAGE_KIT_URL_ENDPOINT=https://ik.imagekit.io/your_id
+
+RAZORPAY_KEY_ID=your_razorpay_key
+RAZORPAY_KEY_SECRET=your_razorpay_secret
+```
+
+### Installation & Running
+
+**Backend**
+```bash
+cd Backend
+npm install
+npm run dev          # Starts at http://localhost:5000
+```
+
+**Frontend**
+```bash
+cd Frontend
+npm install
+npm run dev          # Starts at http://localhost:5173
+```
+
+---
+
+## User Workflows
+
+### Seller: Product Creation
+1. Register as seller
+2. Navigate to dashboard → Create Product
+3. Enter title, description, base price
+4. Upload up to 7 images (validated, cloud-stored)
+5. System validates inputs and seller authorization
+6. Product appears in marketplace and seller dashboard
+
+### Seller: Add Product Variant
+1. View product from dashboard
+2. Click "Add Variant"
+3. Set variant attributes (Size, Color, etc.)
+4. Upload variant-specific images
+5. Set variant price and stock quantity
+6. Variant appears on product detail page for buyers
+
+### Buyer: Browse & Purchase
+1. Register as buyer
+2. Browse marketplace or search products
+3. View product with variant options
+4. Add variant to cart with quantity
+5. Proceed to checkout
+6. Complete payment via Razorpay
+7. Order confirmation and success page
+
+---
+
+## Features Implemented
+
+**Core Functionality**
+- Complete user authentication system (email/password + OAuth)
+- Product creation, listing, and variant management
+- Role-based access control for seller operations
+- Shopping cart with real-time validation
+- Payment integration and order processing
+- Image upload and cloud storage
+
+**Code Quality**
+- MVC architecture for maintainability
+- Middleware-based concern separation
+- Validation at multiple layers
+- Error handling throughout
+- Comments on complex business logic
+- Scalable database schema design
+
+---
+
+## Development Roadmap
+
+**Short Term**
+- Advanced product search and filtering
+- Product edit and delete functionality
 - Order history and tracking
-- Payment integration (Stripe/Razorpay)
-- Invoice generation
+- Product reviews and ratings system
 
-Long term:
-- Buyer and seller dashboards
-- Analytics and reporting
+**Medium Term**
+- Seller and buyer analytics dashboards
 - Wishlist functionality
-- User profile management
-- Notifications system
+- Inventory alerts and stock management
+- Email notifications system
 
----
-
-## Common Development Tasks
-
-### Testing Product Creation Locally
-
-1. Register as seller account
-2. Navigate to dashboard
-3. Click "Create Product"
-4. Fill title, description, price
-5. Upload images (max 5MB each)
-6. Click submit
-7. Should see product in seller dashboard
-
-### Testing Product Variant Addition
-
-1. From seller dashboard, click product
-2. Click "Add Variant" button
-3. Enter variant attributes (Size: M, etc)
-4. Upload variant images
-5. Set variant-specific price and stock
-6. Click save
-7. Variant appears on product detail page
-
-### Debugging Tips
-
-- Check browser console for frontend errors
-- Check terminal for backend console logs
-- Verify environment variables are loaded
-- Ensure MongoDB connection is working
-- Check ImageKit credentials for upload issues
-- Verify user has seller role for protected endpoints
+**Long Term**
+- Admin panel for platform management
+- Advanced analytics and reporting
+- Recommendation engine
+- Real-time inventory synchronization
+- Multi-seller warehouse management
 
 ---
 
 ## Code Quality Standards
 
-The codebase follows these patterns:
+The implementation follows industry best practices:
 
-- MVC architecture for organization
-- Async/await for asynchronous operations
-- Try-catch blocks for error handling
-- Middleware for cross-cutting concerns
-- Validation at route and controller levels
-- Environment variables for configuration
-- Comments on major functions and complex logic
-
----
-
-## Important Security Notes
-
-- Never commit .env files
-- Always hash passwords before storage
-- Validate user input on backend
-- Use HTTPS in production
-- Implement rate limiting for API
-- Check user authorization for sensitive operations
-- Keep dependencies updated
-- Use environment variables for secrets
+- **Async/Await:** Promise-based async operations throughout
+- **Error Handling:** Comprehensive try-catch with specific error messages
+- **Middleware Pattern:** Cross-cutting concerns handled cleanly
+- **DRY Principle:** Reusable hooks, services, and middleware
+- **Environment Configuration:** All secrets managed via .env
+- **Validation:** Multi-layer validation (client + server)
+- **Documentation:** Clear code comments and endpoint documentation
 
 ---
 
-## Testing the Application Manually
+## Security Considerations
 
-Basic workflow:
-1. Start backend server
-2. Start frontend dev server
-3. Register new account
-4. Login with credentials
-5. If seller, create a product
-6. View product on marketplace
-7. Add variant to product
-8. Check product detail with variant selection
-
----
-
-## Development Progress
-
-Started: Basic authentication system
-Current: Product creation and variants
-Next: Shopping cart and orders
-
-Date last worked on: May 2026
+- Passwords hashed with bcryptjs (10 salt rounds)
+- JWT tokens with 7-day expiration
+- Role-based authorization on all protected endpoints
+- Input validation on every API endpoint
+- CORS properly configured for production
+- Environment variables for all credentials
+- Cloud storage for images (no server storage)
+- Stock validation prevents inventory manipulation
 
 ---
 
-## Notes for Contributors
+## Testing Workflow
 
-- Write clear commit messages
-- Comment complex business logic
-- Test manually before committing
-- Follow existing code patterns
-- Keep frontend and backend changes separate
-- Update this README when major features complete
+1. Backend: Start with `npm run dev` in Backend directory
+2. Frontend: Start with `npm run dev` in Frontend directory
+3. Register new seller account
+4. Create product with images
+5. Add variants with different attributes
+6. Verify image uploads in ImageKit
+7. Switch to buyer account
+8. Add products to cart
+9. Complete payment through Razorpay
+10. Verify order in database
 
 ---
 
-For questions about specific parts of the code, look for comments in the files or check the controller/service files for the main business logic.
+## File Organization
+
+```
+ShopLane/
+├── Backend/
+│   ├── server.js
+│   ├── package.json
+│   └── src/
+│       ├── app.js                 Express app with middleware setup
+│       ├── config/
+│       │   ├── config.js          Environment variables
+│       │   └── db.js              MongoDB connection
+│       ├── controllers/           Business logic for each feature
+│       ├── models/                Mongoose schemas
+│       ├── routes/                API endpoint definitions
+│       ├── middlewares/           Auth, authorization, error handling
+│       ├── services/              Third-party integrations
+│       ├── validator/             Input validation schemas
+│       └── dao/                   Data access layer
+│
+├── Frontend/
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.js
+│   └── src/
+│       ├── main.jsx
+│       ├── app/
+│       │   ├── App.jsx
+│       │   ├── app.routes.jsx
+│       │   ├── app.store.js       Redux store
+│       │   └── AppLayout.jsx
+│       └── features/
+│           ├── auth/              Auth module (Redux slices, hooks, pages)
+│           ├── products/          Product module (CRUD, variants)
+│           ├── cart/              Cart & checkout module
+│           └── Shared/            Reusable components
+│
+└── Readme.md
+```
+
+---
+
+## Performance & Scalability
+
+- **Image Management:** Cloud storage via ImageKit (reduces server load)
+- **Database Indexing:** Mongoose queries optimized for common operations
+- **Middleware Caching:** Token validation cached per request
+- **State Management:** Redux for efficient frontend state
+- **Pagination Ready:** Backend structure supports adding pagination
+- **Error Recovery:** Proper error handling prevents cascading failures
+
+---
+
+## Contact & Support
+
+For questions about implementation details, refer to the source files where major business logic is concentrated:
+- Authentication: `src/controllers/auth.controller.js`
+- Products: `src/controllers/product.controller.js`
+- Cart & Payments: `src/controllers/cart.controller.js`
+- Frontend State: `src/features/*/state/*.slice.js`
+
+For technical discussions about design decisions or architecture improvements, review the middleware and service files.
